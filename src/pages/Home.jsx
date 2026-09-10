@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import {
   Sprout,
   Leaf,
@@ -38,6 +39,7 @@ function Home() {
       description: t("services.cropRecommendation.description"),
       button: t("services.cropRecommendation.button"),
       className: "green-card",
+      path: "/crop-recommendation",
     },
     {
       icon: <img src={diseaseIcon} alt="DiseaseDetection" className="service-icon" />,
@@ -196,10 +198,17 @@ function Home() {
                   {service.description}
                 </p>
 
-                <button className="card-button">
-                  {service.button}
-                  <ArrowRight size={15} />
-                </button>
+                {service.path ? (
+                  <Link to={service.path} className="card-button">
+                    {service.button}
+                    <ArrowRight size={15} />
+                  </Link>
+                ) : (
+                  <button className="card-button">
+                    {service.button}
+                    <ArrowRight size={15} />
+                  </button>
+                )}
 
               </div>
 

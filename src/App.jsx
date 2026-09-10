@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
+import CropRecommendation from "./pages/CropRecommendation";
 
 function About() {
   return (
@@ -46,6 +47,11 @@ function App() {
         <Route path="/" element={<Home />} />
 
         <Route
+          path="/crop-recommendation"
+          element={<CropRecommendation />}
+        />
+
+        <Route
           path="/about"
           element={<About />}
         />
@@ -71,4 +77,4 @@ function App() {
   );
 }
 
-export default App;
+export default App;
