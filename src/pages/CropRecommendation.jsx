@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Sprout,
-  FlaskConical,
   Thermometer,
   ArrowRight,
   RotateCcw,
@@ -14,49 +13,12 @@ import {
   Sparkles,
   ArrowLeft,
   ChevronRight,
-  ShieldAlert,
-  Gauge,
-  Activity,
-  AlertTriangle,
-  Scale,
 } from "lucide-react";
 import { predictCropRecommendation } from "../services/cropApi";
 
-const PARAM_LABELS = {
-  nitrogen: "Nitrogen (N)",
-  phosphorus: "Phosphorus (P)",
-  potassium: "Potassium (K)",
-  ph: "Soil pH",
-  ec: "Electrical Conductivity (EC)",
-  oc: "Organic Carbon (OC)",
-  caco3: "Calcium Carbonate (CaCO3)",
-};
-
-const getBadgeClass = (badge) => {
-  if (!badge) return "nutrient-badge-optimal";
-  const b = badge.toLowerCase();
-  if (b.includes("optimal")) return "nutrient-badge-optimal";
-  if (b.includes("moderate")) return "nutrient-badge-moderate";
-  return "nutrient-badge-attention";
-};
-
-const getHealthRatingClass = (rating) => {
-  if (!rating) return "health-rating-optimal";
-  const r = rating.toLowerCase();
-  if (r.includes("optimal")) return "health-rating-optimal";
-  if (r.includes("moderate")) return "health-rating-moderate";
-  return "health-rating-attention";
-};
-
-const getHealthScoreColor = (score) => {
-  if (score >= 80) return "linear-gradient(90deg, #38a159 0%, #1d7b39 100%)";
-  if (score >= 60) return "linear-gradient(90deg, #f59e0b 0%, #d97706 100%)";
-  return "linear-gradient(90deg, #ef4444 0%, #dc2626 100%)";
-};
-
 const PRESETS = [
   {
-    name: "Rice Profile (Full)",
+    name: "Rice Profile",
     data: {
       nitrogen: 90,
       phosphorus: 42,
@@ -65,13 +27,10 @@ const PRESETS = [
       humidity: 82.0,
       ph: 6.5,
       rainfall: 202.93,
-      ec: 0.35,
-      oc: 0.82,
-      caco3: 4.5,
     },
   },
   {
-    name: "Maize Profile (Full)",
+    name: "Maize Profile",
     data: {
       nitrogen: 80,
       phosphorus: 48,
@@ -80,13 +39,10 @@ const PRESETS = [
       humidity: 65.0,
       ph: 6.2,
       rainfall: 95.0,
-      ec: 0.28,
-      oc: 0.65,
-      caco3: 3.8,
     },
   },
   {
-    name: "Cotton Profile (7-param only)",
+    name: "Cotton Profile",
     data: {
       nitrogen: 120,
       phosphorus: 45,
@@ -107,9 +63,6 @@ const INITIAL_FORM = {
   humidity: "",
   ph: "",
   rainfall: "",
-  ec: "",
-  oc: "",
-  caco3: "",
 };
 
 function CropRecommendation() {
@@ -121,22 +74,6 @@ function CropRecommendation() {
   const [result, setResult] = useState(null);
 
   const validateField = (name, value) => {
-    // Optional secondary indicators
-    if (name === "ec" || name === "oc" || name === "caco3") {
-      if (value === "" || value === null || value === undefined) {
-        return null;
-      }
-      const num = Number(value);
-      if (isNaN(num)) {
-        return "Must be a valid numeric value";
-      }
-      if (name === "ec" && (num < 0 || num > 20)) return "Valid range is 0 to 20 dS/m";
-      if (name === "oc" && (num < 0 || num > 20)) return "Valid range is 0% to 20%";
-      if (name === "caco3" && (num < 0 || num > 100)) return "Valid range is 0% to 100%";
-      return null;
-    }
-
-    // Required primary parameters
     if (value === "" || value === null || value === undefined) {
       return "This field is required";
     }
@@ -187,9 +124,6 @@ function CropRecommendation() {
       humidity: preset.data.humidity !== undefined ? preset.data.humidity.toString() : "",
       ph: preset.data.ph !== undefined ? preset.data.ph.toString() : "",
       rainfall: preset.data.rainfall !== undefined ? preset.data.rainfall.toString() : "",
-      ec: preset.data.ec !== undefined ? preset.data.ec.toString() : "",
-      oc: preset.data.oc !== undefined ? preset.data.oc.toString() : "",
-      caco3: preset.data.caco3 !== undefined ? preset.data.caco3.toString() : "",
     });
     setErrors({});
     setApiError(null);
@@ -258,8 +192,8 @@ function CropRecommendation() {
           </div>
           <h1>{t("services.cropRecommendation.title", "Crop Recommendation Engine")}</h1>
           <p>
-            Enter your field's soil nutrient parameters and environmental measurements to receive
-            data-driven crop suggestions powered by machine learning and statistical soil evaluation.
+            Enter your field&apos;s soil nutrient parameters and environmental measurements to receive
+            data-driven crop suggestions powered by machine learning.
           </p>
         </div>
       </div>
@@ -270,7 +204,7 @@ function CropRecommendation() {
           <div className="card-header-row">
             <div>
               <h2>Soil & Climate Parameters</h2>
-              <p className="card-subtext">Provide 7 primary readings plus optional secondary soil quality indicators</p>
+              <p className="card-subtext">Provide 7 environmental and soil readings</p>
             </div>
             <button
               type="button"
@@ -313,10 +247,10 @@ function CropRecommendation() {
           )}
 
           <form onSubmit={handleSubmit} noValidate>
-            {/* Section A: Soil Nutrients */}
+            {/* Section A: Soil Macronutrients */}
             <div className="form-group-section">
               <div className="section-title-row">
-                <FlaskConical size={18} className="section-icon" />
+                <Sprout size={18} className="section-icon" />
                 <h3>Soil Macronutrients & pH</h3>
               </div>
 
@@ -470,83 +404,11 @@ function CropRecommendation() {
               </div>
             </div>
 
-            {/* Section C: Optional Soil Quality Indicators */}
-            <div className="form-group-section">
-              <div className="section-title-row optional-section-header">
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <FlaskConical size={18} className="section-icon" />
-                  <h3>Optional Secondary Soil Indicators</h3>
-                </div>
-                <span className="optional-chip">Optional Testing</span>
-              </div>
-              <p className="card-subtext" style={{ marginBottom: "12px" }}>
-                Optionally provide laboratory physicochemical parameters (EC, OC, CaCO3) for a deeper composite soil diagnostic.
-              </p>
-
-              <div className="form-grid-3">
-                <div className="input-field-group">
-                  <label htmlFor="ec">
-                    EC <span className="unit-tag">dS/m (0-20)</span>
-                  </label>
-                  <div className="input-with-icon">
-                    <input
-                      id="ec"
-                      name="ec"
-                      type="number"
-                      step="0.001"
-                      placeholder="e.g. 0.35"
-                      value={formData.ec}
-                      onChange={handleChange}
-                      className={errors.ec ? "input-error" : ""}
-                    />
-                  </div>
-                  {errors.ec && <span className="field-error-text">{errors.ec}</span>}
-                </div>
-
-                <div className="input-field-group">
-                  <label htmlFor="oc">
-                    Organic Carbon <span className="unit-tag">% (0-20)</span>
-                  </label>
-                  <div className="input-with-icon">
-                    <input
-                      id="oc"
-                      name="oc"
-                      type="number"
-                      step="0.01"
-                      placeholder="e.g. 0.52"
-                      value={formData.oc}
-                      onChange={handleChange}
-                      className={errors.oc ? "input-error" : ""}
-                    />
-                  </div>
-                  {errors.oc && <span className="field-error-text">{errors.oc}</span>}
-                </div>
-
-                <div className="input-field-group">
-                  <label htmlFor="caco3">
-                    CaCO3 / Lime <span className="unit-tag">% (0-100)</span>
-                  </label>
-                  <div className="input-with-icon">
-                    <input
-                      id="caco3"
-                      name="caco3"
-                      type="number"
-                      step="0.1"
-                      placeholder="e.g. 4.7"
-                      value={formData.caco3}
-                      onChange={handleChange}
-                      className={errors.caco3 ? "input-error" : ""}
-                    />
-                  </div>
-                  {errors.caco3 && <span className="field-error-text">{errors.caco3}</span>}
-                </div>
-              </div>
-            </div>
-
             {/* Submit CTA */}
             <div className="form-actions">
               <button
                 type="submit"
+                id="crop-recommendation-submit-btn"
                 disabled={loading}
                 className={`submit-recommendation-btn ${loading ? "btn-loading" : ""}`}
               >
@@ -569,7 +431,7 @@ function CropRecommendation() {
 
         {/* Right Column: Results or Guide Placeholder */}
         <div className="crop-result-column" id="recommendation-result">
-          {result ? (
+          {result && result.prediction ? (
             <div className="results-container animate-fade-in">
               {/* Primary Crop Card */}
               <div className="primary-crop-card">
@@ -636,191 +498,6 @@ function CropRecommendation() {
                     </div>
                   </div>
                 )}
-
-              {/* Enhanced Soil Advisory Section */}
-              {result.soil_advisory && (
-                <div className="soil-advisory-card">
-                  <div className="card-mini-title">
-                    <FlaskConical size={16} />
-                    <h3>Soil Diagnostic & Statistical Advisory</h3>
-                  </div>
-
-                  {/* Soil Health Score Box */}
-                  {result.soil_advisory.soil_health_score && (
-                    <div className="soil-health-box">
-                      <div className="health-score-top">
-                        <div className="health-score-title">
-                          <Gauge size={18} />
-                          <span>Composite Soil Health Index</span>
-                        </div>
-                        <div className="health-score-display">
-                          <span className="health-score-value">
-                            {result.soil_advisory.soil_health_score.score}
-                          </span>
-                          <span className="health-score-denom">/ 100</span>
-                        </div>
-                      </div>
-
-                      <div className="health-score-bar">
-                        <div
-                          className="health-score-bar-fill"
-                          style={{
-                            width: `${Math.min(
-                              Math.max(result.soil_advisory.soil_health_score.score, 0),
-                              100
-                            )}%`,
-                            background: getHealthScoreColor(
-                              result.soil_advisory.soil_health_score.score
-                            ),
-                          }}
-                        ></div>
-                      </div>
-
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          marginBottom: "8px",
-                        }}
-                      >
-                        <span
-                          className={`health-rating-badge ${getHealthRatingClass(
-                            result.soil_advisory.soil_health_score.rating
-                          )}`}
-                        >
-                          {result.soil_advisory.soil_health_score.rating} Health Status
-                        </span>
-                      </div>
-
-                      <p className="health-score-summary">
-                        {result.soil_advisory.soil_health_score.summary}
-                      </p>
-
-                      {result.soil_advisory.soil_health_score.score_breakdown && (
-                        <div className="score-factors-grid">
-                          {Object.entries(
-                            result.soil_advisory.soil_health_score.score_breakdown
-                          ).map(([factor, pts]) => (
-                            <span key={factor} className="score-factor-item">
-                              {factor}: <strong>{pts} pts</strong>
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* NPK Balance Info */}
-                  {result.soil_advisory.npk_balance && (
-                    <div className="npk-balance-box">
-                      <div className="npk-balance-header">
-                        <div className="npk-balance-title">
-                          <Scale size={16} />
-                          <span>N-P-K Ratio & Balance</span>
-                        </div>
-                        <span className="npk-ratio-badge">
-                          {result.soil_advisory.npk_balance.ratio_string}
-                        </span>
-                      </div>
-                      <div className="npk-balance-status">
-                        Status: {result.soil_advisory.npk_balance.balance_status}
-                      </div>
-                      <p className="npk-balance-interp">
-                        {result.soil_advisory.npk_balance.interpretation}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Soil Summary */}
-                  <p className="soil-summary-text">{result.soil_advisory.soil_summary}</p>
-
-                  {/* Risk Flags Box (if any) */}
-                  {result.soil_advisory.risk_flags &&
-                    result.soil_advisory.risk_flags.length > 0 && (
-                      <div className="risk-flags-box">
-                        <div className="risk-flags-title">
-                          <AlertTriangle size={16} />
-                          <h4>Soil Risk Flags & Constraints:</h4>
-                        </div>
-                        <ul className="risk-flags-list">
-                          {result.soil_advisory.risk_flags.map((flag, idx) => (
-                            <li key={idx} className="risk-flag-item">
-                              <ShieldAlert size={14} className="risk-bullet-icon" />
-                              <span>{flag}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                  {/* Nutrients & Parameter Analysis Grid */}
-                  <div className="card-mini-title" style={{ marginTop: "14px" }}>
-                    <Activity size={15} />
-                    <h4>Evaluated Parameter Distribution</h4>
-                  </div>
-                  <div className="nutrient-status-grid">
-                    {Object.entries(result.soil_advisory.parameters_analyzed || {}).map(
-                      ([key, data]) => (
-                        <div key={key} className="nutrient-status-item">
-                          <div className="nutrient-label-row">
-                            <span className="nutrient-name">
-                              {PARAM_LABELS[key] || key.toUpperCase()}
-                            </span>
-                            <span
-                              className={`nutrient-badge ${getBadgeClass(data.status_badge)}`}
-                            >
-                              {data.status_badge || "Optimal"}
-                            </span>
-                          </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "baseline",
-                              marginBottom: "4px",
-                            }}
-                          >
-                            <span className="nutrient-val">
-                              {data.input_value} {data.unit}
-                            </span>
-                            <span className="nutrient-level-tag">{data.relative_level}</span>
-                          </div>
-                          <div className="nutrient-ref">
-                            Dataset Median: {data.dataset_median} {data.unit} (Range:{" "}
-                            {data.dataset_range?.[0]} - {data.dataset_range?.[1]} {data.unit})
-                          </div>
-                          {data.interpretation && (
-                            <p className="nutrient-interp">{data.interpretation}</p>
-                          )}
-                        </div>
-                      )
-                    )}
-                  </div>
-
-                  {/* Key Observations */}
-                  {result.soil_advisory.key_observations &&
-                    result.soil_advisory.key_observations.length > 0 && (
-                      <div className="observations-box">
-                        <h4>Key Field Observations:</h4>
-                        <ul>
-                          {result.soil_advisory.key_observations.map((obs, idx) => (
-                            <li key={idx}>
-                              <CheckCircle2 size={14} className="obs-bullet-icon" />
-                              <span>{obs}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                  {/* Advisory Disclaimer */}
-                  <div className="disclaimer-banner">
-                    <ShieldAlert size={16} className="disclaimer-icon" />
-                    <span>{result.soil_advisory.disclaimer}</span>
-                  </div>
-                </div>
-              )}
             </div>
           ) : (
             <div className="empty-state-guide">
@@ -843,7 +520,7 @@ function CropRecommendation() {
                 </div>
                 <div className="guide-step-item">
                   <span className="step-num">3</span>
-                  <span>Obtain AI-evaluated crop recommendations and soil advisory</span>
+                  <span>Obtain AI-evaluated crop recommendations</span>
                 </div>
               </div>
             </div>

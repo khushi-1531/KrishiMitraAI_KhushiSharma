@@ -11,11 +11,10 @@ router = APIRouter()
     "/crop-recommendation/predict",
     response_model=CropRecommendationResponse,
     status_code=status.HTTP_200_OK,
-    summary="Predict optimal crop and generate conservative soil advisory",
+    summary="Predict optimal crop recommendation using ML model",
     description=(
-        "Accepts 7 soil and climate features (N, P, K, temperature, humidity, pH, rainfall), "
-        "evaluates the trained Random Forest model to recommend the most suitable crop with probability distribution, "
-        "and generates a statistical soil advisory report."
+        "Accepts 7 soil and climate features (N, P, K, temperature, humidity, pH, rainfall) "
+        "and evaluates the trained Random Forest model to recommend the most suitable crop with probability distribution."
     )
 )
 async def predict_crop(request: CropRecommendationRequest) -> CropRecommendationResponse:

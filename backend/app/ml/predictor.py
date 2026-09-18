@@ -14,7 +14,6 @@ from ..schemas.crop_schema import (
     PredictionResult,
     AlternativeCrop,
 )
-from .soil_advisory import generate_soil_advisory
 
 logger = logging.getLogger("krishimitra.predictor")
 
@@ -129,17 +128,6 @@ class CropPredictor:
                 top_alternatives=top_alternatives
             )
 
-            # Generate statistical soil advisory
-            soil_advisory = generate_soil_advisory(
-                n=req.nitrogen,
-                p=req.phosphorus,
-                k=req.potassium,
-                ph_val=req.ph,
-                ec=req.ec,
-                oc=req.oc,
-                caco3=req.caco3
-            )
-
             input_dict = {
                 "nitrogen": float(req.nitrogen),
                 "phosphorus": float(req.phosphorus),
@@ -149,17 +137,10 @@ class CropPredictor:
                 "ph": float(req.ph),
                 "rainfall": float(req.rainfall)
             }
-            if req.ec is not None:
-                input_dict["ec"] = float(req.ec)
-            if req.oc is not None:
-                input_dict["oc"] = float(req.oc)
-            if req.caco3 is not None:
-                input_dict["caco3"] = float(req.caco3)
 
             return CropRecommendationResponse(
                 status="success",
                 prediction=prediction_result,
-                soil_advisory=soil_advisory,
                 input_received=input_dict
             )
         except Exception as e:

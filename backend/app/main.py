@@ -33,9 +33,8 @@ app = FastAPI(
     version=settings.VERSION,
     description=(
         "KrishiMitraAI provides intelligent crop recommendations powered by a Scikit-Learn "
-        "RandomForestClassifier trained on empirical agricultural data, coupled with conservative "
-        "statistical soil advisory summaries. Note: Model outputs represent statistical confidence "
-        "distributions based on historical dataset distributions and not laboratory diagnostic guarantees."
+        "RandomForestClassifier trained on empirical agricultural data. Note: Model outputs "
+        "represent statistical confidence distributions based on reference datasets."
     ),
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     docs_url=f"{settings.API_V1_STR}/docs",
@@ -62,7 +61,8 @@ async def root():
         "version": settings.VERSION,
         "docs": f"{settings.API_V1_STR}/docs",
         "health": f"{settings.API_V1_STR}/health",
-        "predict_endpoint": f"{settings.API_V1_STR}/crop-recommendation/predict"
+        "predict_endpoint": f"{settings.API_V1_STR}/crop-recommendation/predict",
+        "market_prices_endpoint": f"{settings.API_V1_STR}/market-prices"
     }
 
 @app.get("/health", tags=["Health"], include_in_schema=False)

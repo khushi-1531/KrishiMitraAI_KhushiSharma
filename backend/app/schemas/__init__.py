@@ -2,16 +2,22 @@ from .crop_schema import (
     CropRecommendationRequest,
     CropRecommendationResponse,
     AlternativeCrop,
-    SoilAdvisoryResponse,
-    NutrientStatus,
+    PredictionResult,
     HealthCheckResponse,
+)
+from .market_schema import (
+    MarketPriceRecord,
+    MarketPriceResponse,
 )
 
 __all__ = [
     "CropRecommendationRequest",
     "CropRecommendationResponse",
     "AlternativeCrop",
-    "SoilAdvisoryResponse",
-    "NutrientStatus",
+    "PredictionResult",
     "HealthCheckResponse",
+    "MarketPriceRecord",
+    "MarketPriceResponse",
 ]
+
+

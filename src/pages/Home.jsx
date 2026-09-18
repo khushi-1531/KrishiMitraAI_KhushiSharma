@@ -1,14 +1,8 @@
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Sprout,
   Leaf,
-  CloudSun,
-  FlaskConical,
-  TrendingUp,
-  Store,
-  Droplets,
-  Bug,
   ArrowRight,
   MessageCircle,
   ShieldCheck,
@@ -31,6 +25,7 @@ import heroImage from "../assets/Farmer_Image.png";
 
 function Home() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const services = [
     {
@@ -47,6 +42,7 @@ function Home() {
       description: t("services.diseaseDetection.description"),
       button: t("services.diseaseDetection.button"),
       className: "green-card",
+      path: "/disease-detection",
     },
     {
       icon: <img src={soilIcon} alt="SoilAnalysis" className="service-icon" />,
@@ -61,6 +57,7 @@ function Home() {
       description: t("services.weather.description"),
       button: t("services.weather.button"),
       className: "yellow-card",
+      path: "/weather-forecast",
     },
     {
       icon: <img src={yieldIcon} alt="YieldPrediction" className="service-icon" />,
@@ -68,6 +65,7 @@ function Home() {
       description: t("services.yieldPrediction.description"),
       button: t("services.yieldPrediction.button"),
       className: "green-card",
+      path: "/yield-prediction",
     },
     {
       icon: <img src={marketIcon} alt="MarketPrices" className="service-icon" />,
@@ -75,6 +73,7 @@ function Home() {
       description: t("services.marketPrices.description"),
       button: t("services.marketPrices.button"),
       className: "yellow-card",
+      path: "/market-prices",
     },
   ];
 
@@ -127,7 +126,13 @@ function Home() {
 
           <div className="hero-buttons">
 
-            <button className="primary-button">
+            <button
+              className="primary-button"
+              onClick={() => {
+                const elem = document.querySelector(".services-section");
+                if (elem) elem.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
               {t("hero.exploreServices")}
               <ArrowRight size={18} />
             </button>
@@ -182,6 +187,8 @@ function Home() {
             <div
               className={`service-card ${service.className}`}
               key={index}
+              onClick={() => service.path && navigate(service.path)}
+              style={{ cursor: service.path ? "pointer" : "default" }}
             >
 
               <div className="service-icon">
