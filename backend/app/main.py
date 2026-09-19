@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .core.config import settings
 from .api.v1.router import api_v1_router
 from .ml.predictor import crop_predictor
+from .ml.yield_predictor import yield_predictor
 
 logging.basicConfig(
     level=logging.INFO,
@@ -23,7 +24,15 @@ async def lifespan(app: FastAPI):
     if crop_predictor.is_loaded():
         logger.info("RandomForest crop recommendation model loaded successfully into memory.")
     else:
-        logger.warning("Warning: Model artifact is missing or could not be loaded.")
+        logger.warning("Warning: Crop recommendation model artifact is missing or could not be loaded.")
+
+    if not yield_predictor.is_loaded():
+        logger.warning("Yield predictor model not loaded at startup; attempting reload...")
+        yield_predictor._load_artifacts()
+    if yield_predictor.is_loaded():
+        logger.info("RandomForest yield prediction model loaded successfully into memory.")
+    else:
+        logger.warning("Warning: Yield prediction model artifact is missing or could not be loaded.")
     yield
     # Shutdown
     logger.info("Shutting down KrishiMitraAI Backend Application...")
@@ -62,7 +71,8 @@ async def root():
         "docs": f"{settings.API_V1_STR}/docs",
         "health": f"{settings.API_V1_STR}/health",
         "predict_endpoint": f"{settings.API_V1_STR}/crop-recommendation/predict",
-        "market_prices_endpoint": f"{settings.API_V1_STR}/market-prices"
+        "market_prices_endpoint": f"{settings.API_V1_STR}/market-prices",
+        "yield_prediction_endpoint": f"{settings.API_V1_STR}/yield-prediction/predict"
     }
 
 @app.get("/health", tags=["Health"], include_in_schema=False)

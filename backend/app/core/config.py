@@ -47,6 +47,8 @@ class Settings(BaseModel):
     ARTIFACTS_DIR: Path = BASE_DIR / "app" / "ml" / "artifacts"
     MODEL_PATH: Path = ARTIFACTS_DIR / "crop_rf_model.joblib"
     METADATA_PATH: Path = ARTIFACTS_DIR / "model_metadata.json"
+    YIELD_MODEL_PATH: Path = ARTIFACTS_DIR / "yield_prediction_model.joblib"
+    YIELD_METADATA_PATH: Path = ARTIFACTS_DIR / "yield_model_metadata.json"
     
     # CORS settings
     CORS_ORIGINS: list[str] = [

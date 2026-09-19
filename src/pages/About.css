@@ -1,0 +1,765 @@
+/* ==========================================================================
+   KRISHIMITRA AI - ABOUT US PAGE STYLING
+   Theme: Light Pistachio & Soft Mint Agricultural Design
+   ========================================================================== */
+
+.about-page-wrapper {
+  width: calc(100% - 40px);
+  max-width: 1450px;
+  margin: 28px auto 70px;
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+}
+
+/* =========================
+   BREADCRUMB & HEADER
+   ========================= */
+
+.about-header-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.about-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.about-breadcrumb .breadcrumb-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #4d6854;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.about-breadcrumb .breadcrumb-link:hover {
+  color: #176d33;
+}
+
+.about-breadcrumb .breadcrumb-separator {
+  color: #9cb3a2;
+}
+
+.about-breadcrumb .breadcrumb-current {
+  font-weight: 600;
+  color: #142c1c;
+}
+
+.about-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.about-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #eaf6ee;
+  color: #1d7b39;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 24px;
+  border: 1px solid #c9e6d2;
+  width: fit-content;
+  box-shadow: 0 2px 6px rgba(29, 123, 57, 0.06);
+}
+
+.about-title-section h1 {
+  font-size: 38px;
+  font-weight: 700;
+  color: #102919;
+  line-height: 1.25;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.about-lead-text {
+  font-size: 17px;
+  color: #425848;
+  max-width: 920px;
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* =========================
+   HERO / STORY SECTION
+   ========================= */
+
+.about-story-card {
+  position: relative;
+  background: linear-gradient(145deg, #ffffff 0%, #f4faf6 100%);
+  border: 1px solid #dcece0;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 6px 28px rgba(25, 60, 35, 0.05);
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 40px;
+  align-items: center;
+  overflow: hidden;
+}
+
+.story-watermark-leaves {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 280px;
+  height: auto;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.about-story-text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.about-story-text .section-tag {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #1d7b39;
+}
+
+.about-story-text h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #102919;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.about-story-text p {
+  font-size: 15px;
+  color: #43594a;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.about-story-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.highlight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14.5px;
+  color: #1e3827;
+  line-height: 1.45;
+}
+
+.highlight-icon {
+  color: #1d7b39;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.about-story-visual {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.farmer-image-frame {
+  width: 100%;
+  max-width: 420px;
+  background: linear-gradient(150deg, #edf7f1 0%, #dff2e5 100%);
+  border: 2px solid #cfe6d6;
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 12px 32px rgba(23, 65, 35, 0.08);
+  display: flex;
+  justify-content: center;
+}
+
+.farmer-image-frame img {
+  width: 100%;
+  height: auto;
+  max-height: 380px;
+  object-fit: contain;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.farmer-image-frame:hover img {
+  transform: scale(1.02);
+}
+
+.story-floating-badge {
+  position: absolute;
+  bottom: -16px;
+  background: #ffffff;
+  border: 1px solid #c9e4d1;
+  border-radius: 16px;
+  padding: 11px 20px;
+  box-shadow: 0 8px 24px rgba(20, 60, 30, 0.12);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.floating-badge-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #e8f5ec;
+  color: #1d7b39;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.floating-badge-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.floating-badge-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #122c1b;
+}
+
+.floating-badge-sub {
+  font-size: 11.5px;
+  color: #526f5b;
+}
+
+/* =========================
+   SECTIONS COMMON HEADER
+   ========================= */
+
+.about-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.section-header .section-tag {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #1d7b39;
+}
+
+.section-header h2 {
+  font-size: 27px;
+  font-weight: 700;
+  color: #102919;
+  margin: 0;
+}
+
+.section-header p {
+  font-size: 15px;
+  color: #4f6756;
+  margin: 0;
+  max-width: 800px;
+  line-height: 1.55;
+}
+
+/* =========================
+   PURPOSE SECTION
+   ========================= */
+
+.purpose-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.purpose-card {
+  background: #ffffff;
+  border: 1px solid #dcece0;
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 4px 16px rgba(25, 60, 35, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.purpose-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(25, 60, 35, 0.08);
+  border-color: #badcc4;
+}
+
+.purpose-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #eaf6ee;
+  color: #197034;
+  border: 1px solid #d1ebd8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.purpose-card h3 {
+  font-size: 18.5px;
+  font-weight: 700;
+  color: #122c1b;
+  margin: 0;
+}
+
+.purpose-card p {
+  font-size: 14px;
+  color: #496150;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ==========================================================================
+   WHAT KRISHIMITRA AI PROVIDES (INFORMATION-ONLY SERVICE CARDS)
+   ========================================================================== */
+
+.services-grid-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+/* Non-clickable Information Card */
+.about-service-card {
+  background: #ffffff;
+  border: 1px solid #dbeae0;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 18px rgba(25, 60, 35, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  cursor: default; /* Information-only, no pointer */
+}
+
+.about-service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(25, 60, 35, 0.07);
+  border-color: #badcc4;
+}
+
+.service-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.service-icon-img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  border-radius: 14px;
+  padding: 6px;
+  background: #f1f8f3;
+  border: 1px solid #ddecde;
+}
+
+.service-status-pill {
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.service-status-pill.operational {
+  background: #e3f5e8;
+  color: #176d31;
+  border: 1px solid #bce4c7;
+}
+
+.service-status-pill.capability {
+  background: #edf6f0;
+  color: #2e6640;
+  border: 1px solid #cde4d3;
+}
+
+.service-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.service-card-body h4 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #122c1b;
+  margin: 0;
+}
+
+.service-card-body p {
+  font-size: 13.5px;
+  color: #496150;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Informational Card Footer (No links or buttons) */
+.service-card-footer {
+  padding-top: 12px;
+  border-top: 1px solid #f0f6f2;
+}
+
+.service-info-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #276239;
+  background: #f3faf5;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid #dcefe1;
+}
+
+/* =========================
+   FARMER-CENTRIC APPROACH
+   ========================= */
+
+.farmer-centric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.centric-card {
+  background: #ffffff;
+  border: 1px solid #dcece0;
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 4px 16px rgba(25, 60, 35, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.centric-icon-box {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: #eaf6ee;
+  color: #1a7436;
+  border: 1px solid #cde7d4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.centric-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #122c1b;
+  margin: 0;
+}
+
+.centric-card p {
+  font-size: 14px;
+  color: #496150;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.language-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.lang-chip {
+  background: #f3faf5;
+  color: #1f6432;
+  border: 1px solid #d0e7d6;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+/* =========================
+   TECHNOLOGY & ARCHITECTURE
+   ========================= */
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.tech-card {
+  background: #ffffff;
+  border: 1px solid #dcece0;
+  border-radius: 18px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  box-shadow: 0 3px 14px rgba(25, 60, 35, 0.03);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.tech-card:hover {
+  transform: translateY(-2px);
+  border-color: #badcc4;
+}
+
+.tech-icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #eaf6ee;
+  color: #1d7b39;
+  border: 1px solid #d0e8d6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tech-card h4 {
+  font-size: 16.5px;
+  font-weight: 700;
+  color: #122c1b;
+  margin: 0;
+}
+
+.tech-card p {
+  font-size: 13px;
+  color: #4c6453;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ==========================================================================
+   CLOSING CTA BANNER (KEPT WITH 3 WORKING BUTTONS)
+   ========================================================================== */
+
+.about-cta-banner {
+  background: linear-gradient(135deg, #113a1e 0%, #1a572c 100%);
+  border-radius: 22px;
+  padding: 44px 40px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  box-shadow: 0 10px 32px rgba(17, 58, 30, 0.22);
+}
+
+.about-cta-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 680px;
+}
+
+.about-cta-content h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.about-cta-content p {
+  font-size: 15.5px;
+  color: #d1ebd8;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.about-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.about-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.about-cta-btn.primary {
+  background: #ffffff;
+  color: #113a1e;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+.about-cta-btn.primary:hover {
+  background: #f1f8f3;
+  transform: translateY(-1px);
+}
+
+.about-cta-btn.secondary {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.about-cta-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.about-cta-btn.outline {
+  background: transparent;
+  color: #e2f5e7;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.about-cta-btn.outline:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+   ========================= */
+
+@media (max-width: 1200px) {
+  .tech-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .about-story-card {
+    grid-template-columns: 1fr;
+    padding: 32px 28px;
+    gap: 30px;
+  }
+
+  .about-story-visual {
+    order: -1;
+  }
+
+  .farmer-image-frame {
+    max-width: 340px;
+  }
+
+  .purpose-grid,
+  .farmer-centric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .about-cta-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px 28px;
+  }
+
+  .about-cta-actions {
+    width: 100%;
+  }
+
+  .about-cta-btn {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-page-wrapper {
+    width: calc(100% - 24px);
+    margin-top: 18px;
+    gap: 32px;
+  }
+
+  .about-title-section h1 {
+    font-size: 28px;
+  }
+
+  .about-lead-text {
+    font-size: 15px;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tech-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-story-card {
+    padding: 24px 20px;
+  }
+
+  .about-story-text h2 {
+    font-size: 23px;
+  }
+
+  .story-floating-badge {
+    position: static;
+    margin-top: 14px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-cta-actions {
+    flex-direction: column;
+  }
+
+  .about-cta-btn {
+    width: 100%;
+  }
+}

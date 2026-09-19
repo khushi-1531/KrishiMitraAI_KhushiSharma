@@ -5,6 +5,11 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import CropRecommendation from "./pages/CropRecommendation";
 import MarketPrices from "./pages/MarketPrices";
+import About from "./pages/About";
+import Services from "./pages/Services";
+import Resources from "./pages/Resources";
+import Contact from "./pages/Contact";
+import YieldPrediction from "./pages/YieldPrediction";
 
 function DiseaseDetection() {
   const { t } = useTranslation();
@@ -28,51 +33,6 @@ function WeatherForecast() {
       <Link to="/" style={{ color: "#1d7136", fontWeight: 600, marginTop: "8px", textDecoration: "none" }}>
         ← {t("navbar.home", "Back to Home")}
       </Link>
-    </div>
-  );
-}
-
-function YieldPrediction() {
-  const { t } = useTranslation();
-  return (
-    <div className="page-placeholder">
-      <h1>{t("services.yieldPrediction.title", "Yield Prediction")}</h1>
-      <p>{t("services.yieldPrediction.description", "Predict your crop yield using AI models and historical data.")}</p>
-      <Link to="/" style={{ color: "#1d7136", fontWeight: 600, marginTop: "8px", textDecoration: "none" }}>
-        ← {t("navbar.home", "Back to Home")}
-      </Link>
-    </div>
-  );
-}
-
-function About() {
-  return (
-    <div className="page-placeholder">
-      <h1>About Us</h1>
-    </div>
-  );
-}
-
-function Services() {
-  return (
-    <div className="page-placeholder">
-      <h1>Services</h1>
-    </div>
-  );
-}
-
-function Resources() {
-  return (
-    <div className="page-placeholder">
-      <h1>Resources</h1>
-    </div>
-  );
-}
-
-function Contact() {
-  return (
-    <div className="page-placeholder">
-      <h1>Contact Us</h1>
     </div>
   );
 }
