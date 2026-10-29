@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+
 import {
-  TrendingUp,
   Sparkles,
   ArrowRight,
   ArrowLeft,
@@ -17,42 +17,139 @@ import {
   Droplets,
   FlaskConical,
   Bug,
-  HelpCircle,
 } from "lucide-react";
+
 import { predictCropYield } from "../services/yieldApi";
 import "./YieldPrediction.css";
 
+
+// ============================================================
+// STATIC MODEL VALUES
+// IMPORTANT:
+// Keep these values in English because the backend/model expects
+// the original categorical values.
+// ============================================================
+
 const STATES = [
-  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
-  "Delhi", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jammu and Kashmir",
-  "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra",
-  "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Puducherry",
-  "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
-  "Uttar Pradesh", "Uttarakhand", "West Bengal"
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Delhi",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jammu and Kashmir",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Puducherry",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
 ];
 
 const CROPS = [
-  "Arecanut", "Arhar/Tur", "Bajra", "Banana", "Barley", "Black pepper",
-  "Cardamom", "Cashewnut", "Castor seed", "Coconut", "Coriander", "Cotton(lint)",
-  "Cowpea(Lobia)", "Dry chillies", "Garlic", "Ginger", "Gram", "Grapes",
-  "Groundnut", "Guar seed", "Horse-gram", "Jowar", "Jute", "Khesari",
-  "Lentil", "Linseed", "Maize", "Mango", "Masoor", "Mesta", "Moong",
-  "Moong(Green Gram)", "Moth", "Mustard", "Niger seed", "Oilseeds total",
-  "Onion", "Other  Rabi pulses", "Other Cereals", "Other Kharif pulses",
-  "Other Summer Pulses", "Peas & beans (Pulses)", "Potato", "Ragi",
-  "Rapeseed &Mustard", "Rice", "Rubber", "Safflower", "Sannhamp", "Sesamum",
-  "Small millets", "Soyabean", "Sugarcane", "Sunflower", "Sweet potato",
-  "Tapioca", "Tobacco", "Tomato", "Turmeric", "Urad", "Wheat", "other oilseeds"
+  "Arecanut",
+  "Arhar/Tur",
+  "Bajra",
+  "Banana",
+  "Barley",
+  "Black pepper",
+  "Cardamom",
+  "Cashewnut",
+  "Castor seed",
+  "Coconut",
+  "Coriander",
+  "Cotton(lint)",
+  "Cowpea(Lobia)",
+  "Dry chillies",
+  "Garlic",
+  "Ginger",
+  "Gram",
+  "Grapes",
+  "Groundnut",
+  "Guar seed",
+  "Horse-gram",
+  "Jowar",
+  "Jute",
+  "Khesari",
+  "Lentil",
+  "Linseed",
+  "Maize",
+  "Mango",
+  "Masoor",
+  "Mesta",
+  "Moong",
+  "Moong(Green Gram)",
+  "Moth",
+  "Mustard",
+  "Niger seed",
+  "Oilseeds total",
+  "Onion",
+  "Other  Rabi pulses",
+  "Other Cereals",
+  "Other Kharif pulses",
+  "Other Summer Pulses",
+  "Peas & beans (Pulses)",
+  "Potato",
+  "Ragi",
+  "Rapeseed &Mustard",
+  "Rice",
+  "Rubber",
+  "Safflower",
+  "Sannhamp",
+  "Sesamum",
+  "Small millets",
+  "Soyabean",
+  "Sugarcane",
+  "Sunflower",
+  "Sweet potato",
+  "Tapioca",
+  "Tobacco",
+  "Tomato",
+  "Turmeric",
+  "Urad",
+  "Wheat",
+  "other oilseeds",
 ];
 
 const SEASONS = [
-  "Autumn", "Kharif", "Rabi", "Summer", "Whole Year", "Winter"
+  "Autumn",
+  "Kharif",
+  "Rabi",
+  "Summer",
+  "Whole Year",
+  "Winter",
 ];
+
+
+// ============================================================
+// QUICK SAMPLE PROFILES
+// Model values remain in English.
+// Only display text is translated.
+// ============================================================
 
 const PRESETS = [
   {
-    name: "Wheat (Punjab)",
-    badge: "Rabi Cereal",
+    nameKey: "wheatPunjab",
+    badgeKey: "wheatBadge",
+
     data: {
       year: 2024,
       state: "Punjab",
@@ -64,9 +161,11 @@ const PRESETS = [
       pesticide: 950,
     },
   },
+
   {
-    name: "Jowar (West Bengal)",
-    badge: "Kharif Millet",
+    nameKey: "jowarWestBengal",
+    badgeKey: "jowarBadge",
+
     data: {
       year: 2024,
       state: "West Bengal",
@@ -78,9 +177,11 @@ const PRESETS = [
       pesticide: 260,
     },
   },
+
   {
-    name: "Sweet Potato (Meghalaya)",
-    badge: "Tuber Crop",
+    nameKey: "sweetPotatoMeghalaya",
+    badgeKey: "sweetPotatoBadge",
+
     data: {
       year: 2024,
       state: "Meghalaya",
@@ -92,9 +193,11 @@ const PRESETS = [
       pesticide: 1750,
     },
   },
+
   {
-    name: "Coconut (Andhra Pradesh)",
-    badge: "Plantation (Nuts/ha)",
+    nameKey: "coconutAndhra",
+    badgeKey: "coconutBadge",
+
     data: {
       year: 2024,
       state: "Andhra Pradesh",
@@ -108,6 +211,11 @@ const PRESETS = [
   },
 ];
 
+
+// ============================================================
+// INITIAL FORM
+// ============================================================
+
 const INITIAL_FORM = {
   year: 2024,
   state: "",
@@ -119,78 +227,162 @@ const INITIAL_FORM = {
   pesticide: "",
 };
 
+
+// ============================================================
+// COMPONENT
+// ============================================================
+
 function YieldPrediction() {
   const { t } = useTranslation();
+
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
   const [result, setResult] = useState(null);
 
+
+  // ============================================================
+  // VALIDATION
+  // ============================================================
+
   const validateField = (name, value) => {
     if (value === "" || value === null || value === undefined) {
-      return "This field is required";
+      return t("services.yieldPrediction.required");
     }
 
-    if (name === "state" || name === "crop" || name === "season") {
+    // Dropdown fields
+    if (
+      name === "state" ||
+      name === "crop" ||
+      name === "season"
+    ) {
       if (typeof value !== "string" || !value.trim()) {
-        return "Please select a valid option";
+        return t("services.yieldPrediction.invalidOption");
       }
+
       return null;
     }
 
     const num = Number(value);
+
     if (isNaN(num)) {
-      return "Must be a valid number";
+      return t("services.yieldPrediction.validNumber");
     }
 
     switch (name) {
       case "year":
-        if (num < 0) return "Year cannot be negative";
-        if (num < 1990 || num > 2035) return "Year should be between 1990 and 2035";
+        if (num < 0) {
+          return t("services.yieldPrediction.yearNegative");
+        }
+
+        if (num < 1990 || num > 2035) {
+          return t("services.yieldPrediction.yearRange");
+        }
+
         break;
+
       case "area":
-        if (num < 0) return "Area cannot be negative";
-        if (num === 0) return "Area must be greater than 0 hectares";
+        if (num < 0) {
+          return t("services.yieldPrediction.areaNegative");
+        }
+
+        if (num === 0) {
+          return t("services.yieldPrediction.areaZero");
+        }
+
         break;
+
       case "annual_rainfall":
-        if (num < 0) return "Rainfall cannot be negative";
+        if (num < 0) {
+          return t("services.yieldPrediction.rainfallNegative");
+        }
+
         break;
+
       case "fertilizer":
-        if (num < 0) return "Fertilizer quantity cannot be negative";
+        if (num < 0) {
+          return t("services.yieldPrediction.fertilizerNegative");
+        }
+
         break;
+
       case "pesticide":
-        if (num < 0) return "Pesticide quantity cannot be negative";
+        if (num < 0) {
+          return t("services.yieldPrediction.pesticideNegative");
+        }
+
         break;
+
       default:
         break;
     }
+
     return null;
   };
 
+
+  // ============================================================
+  // HANDLE INPUT CHANGE
+  // ============================================================
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
 
     if (errors[name]) {
       const fieldError = validateField(name, value);
-      setErrors((prev) => ({ ...prev, [name]: fieldError }));
+
+      setErrors((prev) => ({
+        ...prev,
+        [name]: fieldError,
+      }));
     }
-    if (apiError) setApiError(null);
+
+    if (apiError) {
+      setApiError(null);
+    }
   };
+
+
+  // ============================================================
+  // HANDLE BLUR
+  // ============================================================
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
+
     const fieldError = validateField(name, value);
-    setErrors((prev) => ({ ...prev, [name]: fieldError }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: fieldError,
+    }));
   };
 
+
+  // ============================================================
+  // PRESET SELECT
+  // ============================================================
+
   const handlePresetSelect = (preset) => {
-    setFormData({ ...preset.data });
+    setFormData({
+      ...preset.data,
+    });
+
     setErrors({});
     setApiError(null);
     setResult(null);
   };
+
+
+  // ============================================================
+  // RESET
+  // ============================================================
 
   const handleReset = () => {
     setFormData(INITIAL_FORM);
@@ -199,28 +391,57 @@ function YieldPrediction() {
     setResult(null);
   };
 
+
+  // ============================================================
+  // VALIDATE ALL
+  // ============================================================
+
   const validateAll = () => {
     const newErrors = {};
+
     Object.keys(INITIAL_FORM).forEach((key) => {
       const error = validateField(key, formData[key]);
-      if (error) newErrors[key] = error;
+
+      if (error) {
+        newErrors[key] = error;
+      }
     });
+
     setErrors(newErrors);
+
     return {
       isValid: Object.keys(newErrors).length === 0,
       errors: newErrors,
     };
   };
 
+
+  // ============================================================
+  // SUBMIT
+  // ============================================================
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setApiError(null);
 
-    const { isValid, errors: validationErrors } = validateAll();
+    const {
+      isValid,
+      errors: validationErrors,
+    } = validateAll();
+
     if (!isValid) {
-      const firstErrorKey = Object.keys(validationErrors)[0];
-      const el = document.querySelector(`[name="${firstErrorKey}"]`);
-      if (el) el.focus();
+      const firstErrorKey =
+        Object.keys(validationErrors)[0];
+
+      const el = document.querySelector(
+        `[name="${firstErrorKey}"]`
+      );
+
+      if (el) {
+        el.focus();
+      }
+
       return;
     }
 
@@ -228,394 +449,857 @@ function YieldPrediction() {
 
     try {
       const data = await predictCropYield(formData);
+
       setResult(data);
-      // Smoothly scroll to result container
+
       setTimeout(() => {
-        const resElem = document.getElementById("yield-result-section");
-        if (resElem) resElem.scrollIntoView({ behavior: "smooth" });
+        const resElem = document.getElementById(
+          "yield-result-section"
+        );
+
+        if (resElem) {
+          resElem.scrollIntoView({
+            behavior: "smooth",
+          });
+        }
       }, 100);
+
     } catch (err) {
-      setApiError(err.message || "Failed to predict crop yield. Please try again.");
+      setApiError(
+        err.message ||
+          t(
+            "services.yieldPrediction.defaultApiError",
+            "Failed to predict crop yield. Please try again."
+          )
+      );
     } finally {
       setLoading(false);
     }
   };
 
+
+  // ============================================================
+  // RENDER
+  // ============================================================
+
   return (
     <div className="yield-page">
-      {/* Header Container */}
+
+      {/* ======================================================
+          HEADER
+      ====================================================== */}
+
       <div className="yield-header">
-        <div className="yield-breadcrumb">
-          <Link to="/">Home</Link>
-          <span>/</span>
-          <span>Yield Prediction</span>
-        </div>
 
         <div className="yield-title-wrap">
+
           <div className="yield-badge">
             <Sparkles size={16} />
-            <span>AI Agricultural Analytics</span>
+
+            <span>
+              {t(
+                "services.yieldPrediction.aiAnalytics"
+              )}
+            </span>
           </div>
-          <h1 className="yield-title">Yield Prediction</h1>
+
+          <h1 className="yield-title">
+            {t(
+              "services.yieldPrediction.title"
+            )}
+          </h1>
+
           <p className="yield-subtitle">
-            Estimate crop yield using crop, location, season, area and agricultural factors.
+            {t(
+              "services.yieldPrediction.subtitle"
+            )}
           </p>
+
         </div>
       </div>
 
+
+      {/* ======================================================
+          MAIN CONTENT
+      ====================================================== */}
+
       <div className="yield-content-container">
-        {/* Quick-fill Sample Presets */}
+
+
+        {/* ====================================================
+            QUICK SAMPLE PROFILES
+        ==================================================== */}
+
         <div className="yield-presets-box">
+
           <div className="presets-header">
+
             <Layers size={18} />
-            <span>Quick Sample Profiles (Click to Auto-fill)</span>
+
+            <span>
+              {t(
+                "services.yieldPrediction.quickSamples"
+              )}
+            </span>
+
           </div>
+
+
           <div className="presets-grid">
+
             {PRESETS.map((preset, idx) => (
+
               <button
                 key={idx}
                 type="button"
                 className="preset-btn"
-                onClick={() => handlePresetSelect(preset)}
+                onClick={() =>
+                  handlePresetSelect(preset)
+                }
               >
-                <span className="preset-name">{preset.name}</span>
-                <span className="preset-badge">{preset.badge}</span>
+
+                <span className="preset-name">
+                  {t(
+                    `services.yieldPrediction.presets.${preset.nameKey}`
+                  )}
+                </span>
+
+                <span className="preset-badge">
+                  {t(
+                    `services.yieldPrediction.presets.${preset.badgeKey}`
+                  )}
+                </span>
+
               </button>
+
             ))}
+
           </div>
         </div>
 
-        {/* API Error Notification */}
+
+        {/* ====================================================
+            API ERROR
+        ==================================================== */}
+
         {apiError && (
-          <div className="yield-error-banner" role="alert">
+
+          <div
+            className="yield-error-banner"
+            role="alert"
+          >
+
             <AlertCircle size={20} />
+
             <div className="yield-error-content">
-              <strong>Prediction Request Notice:</strong>
+
+              <strong>
+                {t(
+                  "services.yieldPrediction.predictionRequestNotice"
+                )}
+              </strong>
+
               <p>{apiError}</p>
+
             </div>
+
             <button
               type="button"
               className="error-dismiss-btn"
-              onClick={() => setApiError(null)}
+              onClick={() =>
+                setApiError(null)
+              }
             >
               ×
             </button>
+
           </div>
+
         )}
 
-        {/* Main Input Form Card */}
+
+        {/* ====================================================
+            FORM CARD
+        ==================================================== */}
+
         <div className="yield-form-card">
-          <form onSubmit={handleSubmit} noValidate>
+
+          <form
+            onSubmit={handleSubmit}
+            noValidate
+          >
+
+            {/* FORM TITLE */}
+
             <div className="form-section-title">
+
               <Sprout size={20} />
-              <h3>Farm & Agricultural Parameters</h3>
+
+              <h3>
+                {t(
+                  "services.yieldPrediction.farmParameters"
+                )}
+              </h3>
+
             </div>
 
+
+            {/* ==================================================
+                FORM GRID
+            ================================================== */}
+
             <div className="form-grid">
-              {/* Year */}
-              <div className={`form-group ${errors.year ? "has-error" : ""}`}>
-                <label htmlFor="input-year">
+
+
+              {/* YEAR */}
+
+              <div className="form-group">
+
+                <label htmlFor="year">
                   <Calendar size={15} />
-                  <span>Harvest Year</span>
-                  <span className="required-star">*</span>
+
+                  {t(
+                    "services.yieldPrediction.harvestYear"
+                  )}
                 </label>
+
                 <input
-                  type="number"
-                  id="input-year"
+                  id="year"
                   name="year"
+                  type="number"
                   value={formData.year}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  placeholder="e.g. 2024"
-                  min="1990"
-                  max="2035"
+                  placeholder={t(
+                    "services.yieldPrediction.placeholders.year"
+                  )}
+                  className={
+                    errors.year
+                      ? "input-error"
+                      : ""
+                  }
                 />
-                {errors.year && <span className="error-text">{errors.year}</span>}
+
+                {errors.year && (
+                  <span className="field-error">
+                    {errors.year}
+                  </span>
+                )}
+
               </div>
 
-              {/* State */}
-              <div className={`form-group ${errors.state ? "has-error" : ""}`}>
-                <label htmlFor="select-state">
+
+              {/* STATE */}
+
+              <div className="form-group">
+
+                <label htmlFor="state">
                   <MapPin size={15} />
-                  <span>State / Union Territory</span>
-                  <span className="required-star">*</span>
+
+                  {t(
+                    "services.yieldPrediction.state"
+                  )}
                 </label>
+
                 <select
-                  id="select-state"
+                  id="state"
                   name="state"
                   value={formData.state}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={
+                    errors.state
+                      ? "input-error"
+                      : ""
+                  }
                 >
-                  <option value="">-- Select State --</option>
-                  {STATES.map((st) => (
-                    <option key={st} value={st}>
-                      {st}
+
+                  <option value="">
+                    {t(
+                      "services.yieldPrediction.selectState"
+                    )}
+                  </option>
+
+                  {STATES.map((state) => (
+
+                    <option
+                      key={state}
+                      value={state}
+                    >
+                      {state}
                     </option>
+
                   ))}
+
                 </select>
-                {errors.state && <span className="error-text">{errors.state}</span>}
+
+                {errors.state && (
+                  <span className="field-error">
+                    {errors.state}
+                  </span>
+                )}
+
               </div>
 
-              {/* Crop */}
-              <div className={`form-group ${errors.crop ? "has-error" : ""}`}>
-                <label htmlFor="select-crop">
+
+              {/* CROP */}
+
+              <div className="form-group">
+
+                <label htmlFor="crop">
                   <Sprout size={15} />
-                  <span>Crop</span>
-                  <span className="required-star">*</span>
+
+                  {t(
+                    "services.yieldPrediction.crop"
+                  )}
                 </label>
+
                 <select
-                  id="select-crop"
+                  id="crop"
                   name="crop"
                   value={formData.crop}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={
+                    errors.crop
+                      ? "input-error"
+                      : ""
+                  }
                 >
-                  <option value="">-- Select Crop --</option>
-                  {CROPS.map((cr) => (
-                    <option key={cr} value={cr}>
-                      {cr}
+
+                  <option value="">
+                    {t(
+                      "services.yieldPrediction.selectCrop"
+                    )}
+                  </option>
+
+                  {CROPS.map((crop) => (
+
+                    <option
+                      key={crop}
+                      value={crop}
+                    >
+                      {crop}
                     </option>
+
                   ))}
+
                 </select>
-                {errors.crop && <span className="error-text">{errors.crop}</span>}
+
+                {errors.crop && (
+                  <span className="field-error">
+                    {errors.crop}
+                  </span>
+                )}
+
               </div>
 
-              {/* Season */}
-              <div className={`form-group ${errors.season ? "has-error" : ""}`}>
-                <label htmlFor="select-season">
+
+              {/* SEASON */}
+
+              <div className="form-group">
+
+                <label htmlFor="season">
                   <Calendar size={15} />
-                  <span>Season</span>
-                  <span className="required-star">*</span>
+
+                  {t(
+                    "services.yieldPrediction.season"
+                  )}
                 </label>
+
                 <select
-                  id="select-season"
+                  id="season"
                   name="season"
                   value={formData.season}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={
+                    errors.season
+                      ? "input-error"
+                      : ""
+                  }
                 >
-                  <option value="">-- Select Season --</option>
-                  {SEASONS.map((sn) => (
-                    <option key={sn} value={sn}>
-                      {sn}
+
+                  <option value="">
+                    {t(
+                      "services.yieldPrediction.selectSeason"
+                    )}
+                  </option>
+
+                  {SEASONS.map((season) => (
+
+                    <option
+                      key={season}
+                      value={season}
+                    >
+                      {season}
                     </option>
+
                   ))}
+
                 </select>
-                {errors.season && <span className="error-text">{errors.season}</span>}
+
+                {errors.season && (
+                  <span className="field-error">
+                    {errors.season}
+                  </span>
+                )}
+
               </div>
 
-              {/* Area */}
-              <div className={`form-group ${errors.area ? "has-error" : ""}`}>
-                <label htmlFor="input-area">
+
+              {/* AREA */}
+
+              <div className="form-group">
+
+                <label htmlFor="area">
                   <Layers size={15} />
-                  <span>Cultivated Area (Hectares)</span>
-                  <span className="required-star">*</span>
+
+                  {t(
+                    "services.yieldPrediction.cultivatedArea"
+                  )}
                 </label>
+
                 <input
+                  id="area"
+                  name="area"
                   type="number"
                   step="any"
-                  id="input-area"
-                  name="area"
                   value={formData.area}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  placeholder="e.g. 5.5"
-                  min="0.01"
+                  placeholder={t(
+                    "services.yieldPrediction.placeholders.area"
+                  )}
+                  className={
+                    errors.area
+                      ? "input-error"
+                      : ""
+                  }
                 />
-                {errors.area && <span className="error-text">{errors.area}</span>}
+
+                {errors.area && (
+                  <span className="field-error">
+                    {errors.area}
+                  </span>
+                )}
+
               </div>
 
-              {/* Annual Rainfall */}
-              <div className={`form-group ${errors.annual_rainfall ? "has-error" : ""}`}>
-                <label htmlFor="input-rainfall">
+
+              {/* RAINFALL */}
+
+              <div className="form-group">
+
+                <label htmlFor="annual_rainfall">
                   <Droplets size={15} />
-                  <span>Annual Rainfall (mm)</span>
-                  <span className="required-star">*</span>
+
+                  {t(
+                    "services.yieldPrediction.annualRainfall"
+                  )}
                 </label>
+
                 <input
+                  id="annual_rainfall"
+                  name="annual_rainfall"
                   type="number"
                   step="any"
-                  id="input-rainfall"
-                  name="annual_rainfall"
-                  value={formData.annual_rainfall}
+                  value={
+                    formData.annual_rainfall
+                  }
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  placeholder="e.g. 1100"
-                  min="0"
+                  placeholder={t(
+                    "services.yieldPrediction.placeholders.rainfall"
+                  )}
+                  className={
+                    errors.annual_rainfall
+                      ? "input-error"
+                      : ""
+                  }
                 />
+
                 {errors.annual_rainfall && (
-                  <span className="error-text">{errors.annual_rainfall}</span>
+                  <span className="field-error">
+                    {errors.annual_rainfall}
+                  </span>
                 )}
+
               </div>
 
-              {/* Fertilizer */}
-              <div className={`form-group ${errors.fertilizer ? "has-error" : ""}`}>
-                <label htmlFor="input-fertilizer">
+
+              {/* FERTILIZER */}
+
+              <div className="form-group">
+
+                <label htmlFor="fertilizer">
                   <FlaskConical size={15} />
-                  <span>Fertilizer Applied (kg)</span>
-                  <span className="required-star">*</span>
+
+                  {t(
+                    "services.yieldPrediction.fertilizerApplied"
+                  )}
                 </label>
+
                 <input
+                  id="fertilizer"
+                  name="fertilizer"
                   type="number"
                   step="any"
-                  id="input-fertilizer"
-                  name="fertilizer"
                   value={formData.fertilizer}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  placeholder="e.g. 350000"
-                  min="0"
+                  placeholder={t(
+                    "services.yieldPrediction.placeholders.fertilizer"
+                  )}
+                  className={
+                    errors.fertilizer
+                      ? "input-error"
+                      : ""
+                  }
                 />
+
                 {errors.fertilizer && (
-                  <span className="error-text">{errors.fertilizer}</span>
+                  <span className="field-error">
+                    {errors.fertilizer}
+                  </span>
                 )}
+
               </div>
 
-              {/* Pesticide */}
-              <div className={`form-group ${errors.pesticide ? "has-error" : ""}`}>
-                <label htmlFor="input-pesticide">
+
+              {/* PESTICIDE */}
+
+              <div className="form-group">
+
+                <label htmlFor="pesticide">
                   <Bug size={15} />
-                  <span>Pesticide Applied (kg)</span>
-                  <span className="required-star">*</span>
+
+                  {t(
+                    "services.yieldPrediction.pesticideApplied"
+                  )}
                 </label>
+
                 <input
+                  id="pesticide"
+                  name="pesticide"
                   type="number"
                   step="any"
-                  id="input-pesticide"
-                  name="pesticide"
                   value={formData.pesticide}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  placeholder="e.g. 950"
-                  min="0"
+                  placeholder={t(
+                    "services.yieldPrediction.placeholders.pesticide"
+                  )}
+                  className={
+                    errors.pesticide
+                      ? "input-error"
+                      : ""
+                  }
                 />
+
                 {errors.pesticide && (
-                  <span className="error-text">{errors.pesticide}</span>
+                  <span className="field-error">
+                    {errors.pesticide}
+                  </span>
                 )}
+
               </div>
+
             </div>
 
-            {/* Action Buttons */}
-            <div className="form-actions">
+
+            {/* ==================================================
+                ACTION BUTTONS
+            ================================================== */}
+
+            <div className="yield-form-actions">
+
               <button
                 type="button"
                 className="reset-btn"
                 onClick={handleReset}
-                disabled={loading}
               >
                 <RotateCcw size={16} />
-                <span>Reset Form</span>
+
+                {t(
+                  "services.yieldPrediction.resetForm"
+                )}
               </button>
+
 
               <button
                 type="submit"
-                className="submit-btn"
+                className="predict-btn"
                 disabled={loading}
               >
+
                 {loading ? (
+
                   <>
-                    <span className="spinner"></span>
-                    <span>Predicting Yield...</span>
+                    <Sparkles size={17} />
+
+                    {t(
+                      "services.yieldPrediction.predictingYield"
+                    )}
                   </>
+
                 ) : (
+
                   <>
-                    <span>Predict Yield</span>
-                    <ArrowRight size={18} />
+                    <Sparkles size={17} />
+
+                    {t(
+                      "services.yieldPrediction.button"
+                    )}
+
+                    <ArrowRight size={17} />
+
                   </>
+
                 )}
+
               </button>
+
             </div>
+
           </form>
+
         </div>
 
-        {/* Prediction Results Section */}
+
+        {/* ====================================================
+            RESULT SECTION
+        ==================================================== */}
+
         {result && (
-          <div id="yield-result-section" className="yield-result-card">
+
+          <div
+            id="yield-result-section"
+            className="yield-result-section"
+          >
+
+            {/* RESULT HEADER */}
+
             <div className="result-header">
-              <div className="result-status-badge">
-                <CheckCircle2 size={18} />
-                <span>Prediction Ready</span>
-              </div>
-              <span className="result-model-badge">
-                Random Forest ML Regressor
-              </span>
-            </div>
 
-            {/* Main Result Highlight Box */}
-            <div className="yield-highlight-box">
-              <span className="yield-highlight-label">Predicted Yield</span>
-              <div className="yield-number-row">
-                <span className="yield-number">
-                  {Number(result.predicted_yield).toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 4,
-                  })}
-                </span>
-                <span className="yield-unit">{result.unit}</span>
-              </div>
-              <p className="yield-disclaimer">
-                Forecast calculated from empirical multi-factor agricultural models.
-              </p>
-            </div>
-
-            {/* Summary Details Grid */}
-            <div className="result-details-grid">
-              <div className="detail-item">
-                <span className="detail-label">Crop</span>
-                <span className="detail-value">{result.crop}</span>
+              <div className="result-success-icon">
+                <CheckCircle2 size={24} />
               </div>
 
-              <div className="detail-item">
-                <span className="detail-label">State</span>
-                <span className="detail-value">{result.state}</span>
-              </div>
-
-              <div className="detail-item">
-                <span className="detail-label">Season</span>
-                <span className="detail-value">{result.season}</span>
-              </div>
-
-              <div className="detail-item">
-                <span className="detail-label">Area</span>
-                <span className="detail-value">{result.area} Hectares</span>
-              </div>
-            </div>
-
-            {/* Farmer Insight Banner */}
-            <div className="farmer-tips-banner">
-              <Info size={20} />
               <div>
-                <strong>Yield Maximization Tip:</strong>
+
+                <h2>
+                  {t(
+                    "services.yieldPrediction.predictionReady"
+                  )}
+                </h2>
+
                 <p>
-                  Maintain balanced NPK fertilization and timely irrigation matching the critical
-                  growth stages of {result.crop} to realize optimal harvest output.
+                  {t(
+                    "services.yieldPrediction.model"
+                  )}
                 </p>
+
               </div>
+
             </div>
 
-            {/* Card Footer Actions */}
-            <div className="result-footer-actions">
-              <Link to="/" className="back-home-btn">
-                <ArrowLeft size={16} />
-                <span>Back to Home</span>
+
+            {/* PREDICTED YIELD */}
+
+            <div className="predicted-yield-card">
+
+              <div className="predicted-yield-label">
+                {t(
+                  "services.yieldPrediction.predictedYield"
+                )}
+              </div>
+
+              <div className="predicted-yield-value">
+                {result.predicted_yield ??
+                  result.predictedYield ??
+                  result.yield ??
+                  "--"}
+              </div>
+
+              {result.unit && (
+                <div className="predicted-yield-unit">
+                  {result.unit}
+                </div>
+              )}
+
+            </div>
+
+
+            {/* DISCLAIMER */}
+
+            <div className="yield-disclaimer">
+
+              <Info size={17} />
+
+              <span>
+                {t(
+                  "services.yieldPrediction.disclaimer"
+                )}
+              </span>
+
+            </div>
+
+
+            {/* RESULT DETAILS */}
+
+            <div className="yield-result-details">
+
+              <div className="result-detail-item">
+
+                <span className="detail-label">
+                  {t(
+                    "services.yieldPrediction.crop"
+                  )}
+                </span>
+
+                <strong>
+                  {result.crop || formData.crop}
+                </strong>
+
+              </div>
+
+
+              <div className="result-detail-item">
+
+                <span className="detail-label">
+                  {t(
+                    "services.yieldPrediction.state"
+                  )}
+                </span>
+
+                <strong>
+                  {result.state || formData.state}
+                </strong>
+
+              </div>
+
+
+              <div className="result-detail-item">
+
+                <span className="detail-label">
+                  {t(
+                    "services.yieldPrediction.season"
+                  )}
+                </span>
+
+                <strong>
+                  {result.season || formData.season}
+                </strong>
+
+              </div>
+
+
+              <div className="result-detail-item">
+
+                <span className="detail-label">
+                  {t(
+                    "services.yieldPrediction.area"
+                  )}
+                </span>
+
+                <strong>
+                  {result.area ?? formData.area}
+                </strong>
+
+                <span>
+                  {" "}
+                  {t(
+                    "services.yieldPrediction.hectares"
+                  )}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            {/* ==================================================
+                YIELD TIP
+            ================================================== */}
+
+            <div className="yield-tip-box">
+
+              <div className="yield-tip-icon">
+                <Sparkles size={18} />
+              </div>
+
+              <div>
+
+                <strong>
+                  {t(
+                    "services.yieldPrediction.yieldMaximizationTip"
+                  )}
+                </strong>
+
+                <p>
+                  {t(
+                    "services.yieldPrediction.yieldTip",
+                    {
+                      crop:
+                        result.crop ||
+                        formData.crop,
+                    }
+                  )}
+                </p>
+
+              </div>
+
+            </div>
+
+
+            {/* ==================================================
+                RESULT ACTIONS
+            ================================================== */}
+
+            <div className="result-actions">
+
+              <Link
+                to="/"
+                className="back-home-btn"
+              >
+                <ArrowLeft size={17} />
+
+                {t(
+                  "services.yieldPrediction.backHome"
+                )}
               </Link>
+
 
               <button
                 type="button"
                 className="predict-another-btn"
                 onClick={() => {
-                  setResult(null);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
+                  handleReset();
+
+                  window.scrollTo({
+                    top: 0,
+                    behavior: "smooth",
+                  });
                 }}
               >
-                <span>Predict Another Crop</span>
-                <ArrowRight size={16} />
+
+                <RotateCcw size={17} />
+
+                {t(
+                  "services.yieldPrediction.predictAnother"
+                )}
+
               </button>
+
             </div>
+
           </div>
+
         )}
+
       </div>
+
     </div>
   );
 }

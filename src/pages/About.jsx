@@ -1,30 +1,24 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+
 import {
-  ArrowLeft,
   ArrowRight,
-  ChevronRight,
   Sprout,
-  ShieldCheck,
-  CheckCircle2,
   Target,
   Languages,
   Cpu,
   Database,
   Smartphone,
-  Sparkles,
-  Layers,
   TrendingUp,
   FlaskConical,
   Users,
   CloudSun,
   ScanLine,
   BarChart3,
-  Leaf,
+  Layers,
 } from "lucide-react";
 
 import farmerImage from "../assets/Farmer_Image.png";
-import leavesImage from "../assets/leaves_image.png";
 import cropIcon from "../assets/cropRecommendation_image.png";
 import soilIcon from "../assets/soilanalysis_image.png";
 import marketIcon from "../assets/marketprice_image.png";
@@ -36,442 +30,691 @@ import "./About.css";
 
 const REGIONAL_LANGUAGES = [
   { code: "en", name: "English" },
-  { code: "hi", name: "हिंदी (Hindi)" },
-  { code: "mr", name: "मराठी (Marathi)" },
-  { code: "pa", name: "ਪੰਜਾਬੀ (Punjabi)" },
-  { code: "bn", name: "বাংলা (Bengali)" },
-  { code: "gu", name: "ગુજરાતી (Gujarati)" },
-  { code: "ta", name: "தமிழ் (Tamil)" },
-  { code: "te", name: "తెలుగు (Telugu)" },
-  { code: "kn", name: "ಕನ್ನಡ (Kannada)" },
-  { code: "ml", name: "മലയാളം (Malayalam)" },
-  { code: "or", name: "ଓଡ଼ିଆ (Odia)" },
-  { code: "bho", name: "भोजपुरी (Bhojpuri)" },
+  { code: "hi", name: "हिंदी" },
+  { code: "bn", name: "বাংলা" },
+  { code: "pa", name: "ਪੰਜਾਬੀ" },
+  { code: "ta", name: "தமிழ்" },
+  { code: "mr", name: "मराठी" },
+  { code: "te", name: "తెలుగు" },
+  { code: "ml", name: "മലയാളം" },
+  { code: "kn", name: "ಕನ್ನಡ" },
+  { code: "or", name: "ଓଡ଼ିଆ" },
+  { code: "gu", name: "ગુજરાતી" },
 ];
 
 function About() {
   const { t } = useTranslation();
 
-  return (
-    <main className="about-page-wrapper">
-      {/* ================= HEADER & BREADCRUMB ================= */}
-      <header className="about-header-container">
-        <nav className="about-breadcrumb" aria-label="Breadcrumb">
-          <Link to="/" className="breadcrumb-link">
-            <ArrowLeft size={16} />
-            <span>{t("navbar.home", "Home")}</span>
-          </Link>
-          <ChevronRight size={14} className="breadcrumb-separator" />
-          <span className="breadcrumb-current">{t("navbar.about", "About Us")}</span>
-        </nav>
+  const services = [
+    {
+      key: "crop",
+      image: cropIcon,
+      icon: Sprout,
+    },
+    {
+      key: "soil",
+      image: soilIcon,
+      icon: FlaskConical,
+    },
+    {
+      key: "market",
+      image: marketIcon,
+      icon: TrendingUp,
+    },
+    {
+      key: "disease",
+      image: diseaseIcon,
+      icon: ScanLine,
+    },
+    {
+      key: "weather",
+      image: weatherIcon,
+      icon: CloudSun,
+    },
+    {
+      key: "yield",
+      image: yieldIcon,
+      icon: BarChart3,
+    },
+  ];
 
-        <div className="about-title-section">
-          <div className="about-badge-pill">
-            <Sparkles size={15} />
-            <span>Smart Agriculture Platform</span>
-          </div>
-          <h1>{t("about.title", "About KrishiMitra AI")}</h1>
-          <p className="about-lead-text">
+  return (
+    <main className="km-about-page">
+
+      {/* ================= STORY ================= */}
+
+      <section className="km-about-story">
+        <div className="km-about-story-image">
+          <img
+            src={farmerImage}
+            alt={t("about.alt.story", "Indian farmer")}
+          />
+        </div>
+
+        <div className="km-about-story-content">
+          <span className="km-about-label">
+            {t("about.storyTag", "Our Story")}
+          </span>
+
+          <h2>
             {t(
-              "about.lead",
-              "KrishiMitra AI is an intelligent, farmer-centric agricultural platform designed to bridge the gap between complex agronomic science, real-time market data, and everyday farming decisions."
+              "about.storyTitle",
+              "Making agricultural technology easier to use."
+            )}
+          </h2>
+
+          <p>
+            {t(
+              "about.storyP1",
+              "Farmers make important decisions every day — from choosing a crop and understanding soil conditions to planning irrigation and checking market prices."
             )}
           </p>
-        </div>
-      </header>
 
-      {/* ================= 1. ABOUT KRISHIMITRA AI (HERO STORY) ================= */}
-      <section className="about-story-card">
-        {/* Subtle decorative leaf accent */}
-        <img
-          src={leavesImage}
-          alt=""
-          aria-hidden="true"
-          className="story-watermark-leaves"
-        />
-
-        <div className="about-story-text">
-          <span className="section-tag">Agricultural Companion</span>
-          <h2>Empowering Farmers with Actionable Intelligence</h2>
           <p>
-            Agriculture forms the backbone of India, supporting over half our population. Yet,
-            smallholder farmers routinely face immense uncertainty — unpredictable rainfall,
-            unbalanced soil nutrients, shifting market rates, and fragmented advice.
-          </p>
-          <p>
-            <strong>KrishiMitra AI</strong> was built to transform agricultural decision-making into
-            a straightforward, transparent, and data-backed process. By translating complex scientific
-            metrics into intuitive visual guidance and multilingual advisories, we help farmers
-            maximize yields and achieve fair prices.
+            {t(
+              "about.storyP2",
+              "KrishiMitra AI was designed to bring these different sources of information into one farmer-friendly platform, reducing the need to search across multiple applications."
+            )}
           </p>
 
-          <div className="about-story-highlights">
-            <div className="highlight-item">
-              <CheckCircle2 size={18} className="highlight-icon" />
-              <span>
-                <strong>Objective Decision Support:</strong> Scientifically validated recommendations
-                grounded in empirical agronomic parameters.
-              </span>
-            </div>
-            <div className="highlight-item">
-              <CheckCircle2 size={18} className="highlight-icon" />
-              <span>
-                <strong>Real-Time Mandi Visibility:</strong> Direct integration with official Government
-                of India APMC market arrival feeds.
-              </span>
-            </div>
-            <div className="highlight-item">
-              <CheckCircle2 size={18} className="highlight-icon" />
-              <span>
-                <strong>Zero Barriers to Access:</strong> 100% free, responsive on any phone, and
-                accessible across 12 Indian regional languages.
-              </span>
-            </div>
-          </div>
-        </div>
+          <div className="km-about-story-points">
 
-        <div className="about-story-visual">
-          <div className="farmer-image-frame">
-            <img
-              src={farmerImage}
-              alt="Indian farmer in agricultural field"
-              loading="lazy"
-            />
-          </div>
-          <div className="story-floating-badge">
-            <div className="floating-badge-icon">
-              <ShieldCheck size={20} />
+            <div>
+              <span className="km-about-point-number">01</span>
+
+              <div>
+                <h4>
+                  {t(
+                    "about.highlights.oneTitle",
+                    "Simple Information"
+                  )}
+                </h4>
+
+                <p>
+                  {t(
+                    "about.highlights.oneText",
+                    "Complex agricultural information is presented in an easier form."
+                  )}
+                </p>
+              </div>
             </div>
-            <div className="floating-badge-content">
-              <span className="floating-badge-title">Farmer-First Innovation</span>
-              <span className="floating-badge-sub">Empirical Data & Transparent Guidance</span>
+
+            <div>
+              <span className="km-about-point-number">02</span>
+
+              <div>
+                <h4>
+                  {t(
+                    "about.highlights.twoTitle",
+                    "Data-Based Support"
+                  )}
+                </h4>
+
+                <p>
+                  {t(
+                    "about.highlights.twoText",
+                    "Agricultural decisions can be supported using data and intelligent models."
+                  )}
+                </p>
+              </div>
             </div>
+
+            <div>
+              <span className="km-about-point-number">03</span>
+
+              <div>
+                <h4>
+                  {t(
+                    "about.highlights.threeTitle",
+                    "Regional Languages"
+                  )}
+                </h4>
+
+                <p>
+                  {t(
+                    "about.highlights.threeText",
+                    "Information can be accessed in multiple Indian languages."
+                  )}
+                </p>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* ================= 2. OUR PURPOSE ================= */}
-      <section className="about-section">
-        <div className="section-header">
-          <span className="section-tag">Core Mission</span>
-          <h2>Our Purpose</h2>
+      {/* ================= PURPOSE ================= */}
+
+      <section className="km-about-section">
+
+        <div className="km-about-heading">
+
+          <span className="km-about-label">
+            {t("about.purposeTag", "Our Purpose")}
+          </span>
+
+          <h2>
+            {t(
+              "about.purposeTitle",
+              "Technology with a practical purpose"
+            )}
+          </h2>
+
           <p>
-            We believe every farmer deserves access to the same precision intelligence used in modern
-            agricultural research laboratories.
+            {t(
+              "about.purposeLead",
+              "KrishiMitra AI focuses on making useful agricultural technology understandable and accessible."
+            )}
           </p>
+
         </div>
 
-        <div className="purpose-grid">
-          <div className="purpose-card">
-            <div className="purpose-icon-box">
-              <Target size={24} />
-            </div>
-            <h3>Democratize Agriculture Data</h3>
-            <p>
-              Transform raw laboratory soil reports, meteorological readings, and wholesale commodity
-              records into plain-language advice that can be acted upon immediately in the field.
-            </p>
-          </div>
+        <div className="km-about-purpose-grid">
 
-          <div className="purpose-card">
-            <div className="purpose-icon-box">
-              <Sprout size={24} />
-            </div>
-            <h3>Reduce Farming Risk</h3>
-            <p>
-              Empower growers with empirical crop recommendations and nutrient balance indicators,
-              reducing costly crop failures, soil exhaustion, and fertilizer misapplications.
-            </p>
-          </div>
+          {/* CARD 1 */}
 
-          <div className="purpose-card">
-            <div className="purpose-icon-box">
-              <TrendingUp size={24} />
+          <article className="km-about-purpose-card">
+
+            <div className="km-about-purpose-icon">
+              <Target size={22} />
             </div>
-            <h3>Improve Market Transparency</h3>
+
+            <span className="km-about-card-number">
+              01
+            </span>
+
+            <h3>
+              {t(
+                "about.purpose.cards.dataTitle",
+                "Useful Data"
+              )}
+            </h3>
+
             <p>
-              Equip farmers with live daily wholesale prices across APMC mandis nationwide so they can
-              negotiate confidently and sell their produce when and where returns are highest.
+              {t(
+                "about.purpose.cards.dataText",
+                "Convert agricultural data into information that farmers can understand and use."
+              )}
             </p>
-          </div>
+
+          </article>
+
+          {/* CARD 2 */}
+
+          <article className="km-about-purpose-card">
+
+            <div className="km-about-purpose-icon">
+              <Sprout size={22} />
+            </div>
+
+            <span className="km-about-card-number">
+              02
+            </span>
+
+            <h3>
+              {t(
+                "about.purpose.cards.riskTitle",
+                "Better Decisions"
+              )}
+            </h3>
+
+            <p>
+              {t(
+                "about.purpose.cards.riskText",
+                "Provide data-supported insights for crop, soil and farming-related decisions."
+              )}
+            </p>
+
+          </article>
+
+          {/* CARD 3 */}
+
+          <article className="km-about-purpose-card">
+
+            <div className="km-about-purpose-icon">
+              <TrendingUp size={22} />
+            </div>
+
+            <span className="km-about-card-number">
+              03
+            </span>
+
+            <h3>
+              {t(
+                "about.purpose.cards.marketTitle",
+                "Market Awareness"
+              )}
+            </h3>
+
+            <p>
+              {t(
+                "about.purpose.cards.marketText",
+                "Make agricultural market information easier to access and understand."
+              )}
+            </p>
+
+          </article>
+
         </div>
       </section>
 
-      {/* ================= 3. WHAT KRISHIMITRA AI PROVIDES (INFORMATION-ONLY) ================= */}
-      <section className="about-section">
-        <div className="section-header">
-          <span className="section-tag">Platform Features</span>
-          <h2>What KrishiMitra AI Provides</h2>
+      {/* ================= SERVICES ================= */}
+
+      <section className="km-about-section km-about-services-section">
+
+        <div className="km-about-heading">
+
+          <span className="km-about-label">
+            {t("about.featuresTag", "What We Provide")}
+          </span>
+
+          <h2>
+            {t(
+              "about.featuresTitle",
+              "Agriculture tools in one place"
+            )}
+          </h2>
+
           <p>
-            A comprehensive overview of the six core modules comprising the KrishiMitra AI platform,
-            spanning machine learning predictions, real-time market intelligence, and agro-climatic capabilities.
+            {t(
+              "about.featuresLead",
+              "KrishiMitra AI combines different agricultural capabilities into one connected platform."
+            )}
           </p>
+
         </div>
 
-        <div className="services-grid-wrapper">
-          <div className="services-grid">
-            {/* 1. Crop Recommendation */}
-            <div className="about-service-card">
-              <div className="service-card-top">
-                <img src={cropIcon} alt="Crop Recommendation" className="service-icon-img" />
-                <span className="service-status-pill operational">Machine Learning</span>
-              </div>
-              <div className="service-card-body">
-                <h4>Crop Recommendation</h4>
-                <p>
-                  Evaluates 7 soil and environmental factors — Nitrogen, Phosphorus, Potassium,
-                  Temperature, Humidity, Soil pH, and Rainfall — using a trained Random Forest Classifier
-                  to recommend optimal crops with high statistical confidence.
-                </p>
-              </div>
-              <div className="service-card-footer">
-                <span className="service-info-tag">
-                  <Cpu size={13} />
-                  RandomForest Classifier • 99.5% Test Accuracy
-                </span>
-              </div>
-            </div>
+        <div className="km-about-services-grid">
 
-            {/* 2. Soil Analysis / Soil Health */}
-            <div className="about-service-card">
-              <div className="service-card-top">
-                <img src={soilIcon} alt="Soil Analysis" className="service-icon-img" />
-                <span className="service-status-pill operational">Nutrient Evaluation</span>
-              </div>
-              <div className="service-card-body">
-                <h4>Soil Analysis & Health</h4>
-                <p>
-                  Assesses primary soil macronutrients (N, P, K) and chemical pH metrics against optimal
-                  dataset ranges, calculating NPK ratio balance and providing clear restorative guidance
-                  to sustain soil fertility.
-                </p>
-              </div>
-              <div className="service-card-footer">
-                <span className="service-info-tag">
-                  <FlaskConical size={13} />
-                  NPK Ratio Balancing • Soil Health Scoring
-                </span>
-              </div>
-            </div>
+          {services.map(({ key, image, icon: Icon }) => (
 
-            {/* 3. Mandi / Market Prices */}
-            <div className="about-service-card">
-              <div className="service-card-top">
-                <img src={marketIcon} alt="Mandi Market Prices" className="service-icon-img" />
-                <span className="service-status-pill operational">Government API Feed</span>
-              </div>
-              <div className="service-card-body">
-                <h4>Mandi / Market Prices</h4>
-                <p>
-                  Direct synchronization with official Government of India Agmarknet data across 28+
-                  states, displaying live minimum, maximum, and modal wholesale rates updated daily to
-                  eliminate middlemen information asymmetry.
-                </p>
-              </div>
-              <div className="service-card-footer">
-                <span className="service-info-tag">
-                  <Database size={13} />
-                  Live Agmarknet Data • 1,000+ APMC Mandis
-                </span>
-              </div>
-            </div>
+            <article
+              className="km-about-service-card"
+              key={key}
+            >
 
-            {/* 4. Disease Detection */}
-            <div className="about-service-card">
-              <div className="service-card-top">
-                <img src={diseaseIcon} alt="Plant Disease Detection" className="service-icon-img" />
-                <span className="service-status-pill capability">Computer Vision Model</span>
-              </div>
-              <div className="service-card-body">
-                <h4>Plant Disease Detection</h4>
-                <p>
-                  Computer vision deep learning framework structured for leaf photograph diagnosis,
-                  aimed at recognizing early symptoms of foliage blights, bacterial spots, and fungal
-                  pathologies to recommend targeted remedies.
-                </p>
-              </div>
-              <div className="service-card-footer">
-                <span className="service-info-tag">
-                  <ScanLine size={13} />
-                  Deep Learning Vision • Foliar Pathology
-                </span>
-              </div>
-            </div>
+              <div className="km-about-service-image">
 
-            {/* 5. Weather Forecast */}
-            <div className="about-service-card">
-              <div className="service-card-top">
-                <img src={weatherIcon} alt="Weather Forecast" className="service-icon-img" />
-                <span className="service-status-pill capability">Agro-Climatic Intelligence</span>
-              </div>
-              <div className="service-card-body">
-                <h4>Weather Forecast</h4>
-                <p>
-                  Location-aware meteorological data integration providing rainfall projections,
-                  temperature trends, and humidity levels to assist farmers in timing irrigation cycles,
-                  pesticide application, and harvesting operations.
-                </p>
-              </div>
-              <div className="service-card-footer">
-                <span className="service-info-tag">
-                  <CloudSun size={13} />
-                  Meteorological Sync • Field Operation Timing
-                </span>
-              </div>
-            </div>
+                <img
+                  src={image}
+                  alt={t(`about.services.${key}.title`)}
+                />
 
-            {/* 6. Yield Prediction */}
-            <div className="about-service-card">
-              <div className="service-card-top">
-                <img src={yieldIcon} alt="Yield Prediction" className="service-icon-img" />
-                <span className="service-status-pill capability">Harvest Analytics</span>
+                <div className="km-about-service-icon">
+                  <Icon size={18} />
+                </div>
+
               </div>
-              <div className="service-card-body">
-                <h4>Yield Prediction</h4>
-                <p>
-                  Data-driven statistical modeling designed to forecast seasonal crop production based
-                  on historical harvest metrics, acreage, and climatic indicators, helping farmers plan
-                  storage, logistics, and revenue targets.
-                </p>
-              </div>
-              <div className="service-card-footer">
-                <span className="service-info-tag">
-                  <BarChart3 size={13} />
-                  Historical Trend Modeling • Multi-Factor Analytics
+
+              <div className="km-about-service-content">
+
+                <span className="km-about-service-label">
+                  {t(`about.services.${key}.badge`)}
                 </span>
+
+                <h3>
+                  {t(`about.services.${key}.title`)}
+                </h3>
+
+                <p>
+                  {t(`about.services.${key}.description`)}
+                </p>
+
+                <div className="km-about-service-meta">
+                  {t(`about.services.${key}.meta`)}
+                </div>
+
               </div>
-            </div>
-          </div>
+
+            </article>
+
+          ))}
+
         </div>
+
       </section>
 
-      {/* ================= 4. FARMER-CENTRIC APPROACH ================= */}
-      <section className="about-section">
-        <div className="section-header">
-          <span className="section-tag">Human-Centered Design</span>
-          <h2>Our Farmer-Centric Approach</h2>
+      {/* ================= FARMER CENTRIC ================= */}
+
+      <section className="km-about-farmer-section">
+
+        <div className="km-about-heading km-about-farmer-heading">
+
+          <span className="km-about-label">
+            {t(
+              "about.farmerTag",
+              "Designed for Farmers"
+            )}
+          </span>
+
+          <h2>
+            {t(
+              "about.farmerTitle",
+              "Technology should feel simple."
+            )}
+          </h2>
+
           <p>
-            Technology is effective only when it is accessible to the people who need it most.
+            {t(
+              "about.farmerLead",
+              "The platform is designed around accessibility, clarity and everyday agricultural needs."
+            )}
           </p>
+
         </div>
 
-        <div className="farmer-centric-grid">
-          <div className="centric-card">
-            <div className="centric-icon-box">
+        <div className="km-about-farmer-grid">
+
+          {/* MULTILINGUAL */}
+
+          <article className="km-about-farmer-feature">
+
+            <div className="km-about-feature-icon">
               <Languages size={22} />
             </div>
-            <h3>Multilingual Accessibility</h3>
+
+            <h3>
+              {t(
+                "about.farmer.cards.multilingual.title",
+                "Multilingual Access"
+              )}
+            </h3>
+
             <p>
-              KrishiMitra AI supports 12 regional languages spoken across India. Farmers can navigate,
-              read market rates, and view recommendations in their native language with one click.
+              {t(
+                "about.farmer.cards.multilingual.text",
+                "Agricultural information can be explored in multiple Indian regional languages."
+              )}
             </p>
-            <div className="language-chips-row">
-              {REGIONAL_LANGUAGES.map((lang) => (
-                <span key={lang.code} className="lang-chip">
-                  {lang.name}
+
+            <div className="km-about-language-list">
+
+              {REGIONAL_LANGUAGES.map((language) => (
+                <span key={language.code}>
+                  {language.name}
                 </span>
               ))}
-            </div>
-          </div>
 
-          <div className="centric-card">
-            <div className="centric-icon-box">
+            </div>
+
+          </article>
+
+          {/* EASY ACCESS */}
+
+          <article className="km-about-farmer-feature">
+
+            <div className="km-about-feature-icon">
               <Smartphone size={22} />
             </div>
-            <h3>Optimized for Rural Connectivity</h3>
-            <p>
-              Clean, fast, and responsive design optimized for standard smartphones and varying mobile
-              network speeds. No heavy payloads or unnecessary animations that drain mobile data.
-            </p>
-          </div>
 
-          <div className="centric-card">
-            <div className="centric-icon-box">
+            <h3>
+              {t(
+                "about.farmer.cards.access.title",
+                "Easy to Access"
+              )}
+            </h3>
+
+            <p>
+              {t(
+                "about.farmer.cards.access.text",
+                "A responsive interface designed to work across phones, tablets and desktop screens."
+              )}
+            </p>
+
+            <div className="km-about-feature-line">
+
+              <CheckCircleIcon />
+
+              {t(
+                "about.farmer.cards.access.item1",
+                "Responsive design"
+              )}
+
+            </div>
+
+            <div className="km-about-feature-line">
+
+              <CheckCircleIcon />
+
+              {t(
+                "about.farmer.cards.access.item2",
+                "Simple navigation"
+              )}
+
+            </div>
+
+          </article>
+
+          {/* CLEAR GUIDANCE */}
+
+          <article className="km-about-farmer-feature">
+
+            <div className="km-about-feature-icon">
               <Layers size={22} />
             </div>
-            <h3>Simple, Jargon-Free Guidance</h3>
+
+            <h3>
+              {t(
+                "about.farmer.cards.simple.title",
+                "Clear Guidance"
+              )}
+            </h3>
+
             <p>
-              Complex statistical distributions and soil chemistry metrics are presented using clear
-              badges, color-coded ranges, and practical suggestions that anyone can understand and act upon.
+              {t(
+                "about.farmer.cards.simple.text",
+                "Technical information is organized into clear sections so users can understand the results more easily."
+              )}
             </p>
-          </div>
+
+            <div className="km-about-feature-line">
+
+              <CheckCircleIcon />
+
+              {t(
+                "about.farmer.cards.simple.item1",
+                "Clear visual information"
+              )}
+
+            </div>
+
+            <div className="km-about-feature-line">
+
+              <CheckCircleIcon />
+
+              {t(
+                "about.farmer.cards.simple.item2",
+                "Practical explanations"
+              )}
+
+            </div>
+
+          </article>
+
         </div>
+
       </section>
 
-      {/* ================= 5. TECHNOLOGY & HOW IT HELPS ================= */}
-      <section className="about-section">
-        <div className="section-header">
-          <span className="section-tag">Engineering Foundation</span>
-          <h2>Technology Grounded in Verified Data</h2>
+      {/* ================= TECHNOLOGY ================= */}
+
+      <section className="km-about-section">
+
+        <div className="km-about-heading">
+
+          <span className="km-about-label">
+            {t("about.techTag", "Technology")}
+          </span>
+
+          <h2>
+            {t(
+              "about.techTitle",
+              "Technology behind KrishiMitra AI"
+            )}
+          </h2>
+
           <p>
-            A transparent overview of how KrishiMitra AI delivers fast, reliable, and verified results.
+            {t(
+              "about.techLead",
+              "The platform combines machine learning, APIs and modern web technologies to deliver its agricultural features."
+            )}
           </p>
+
         </div>
 
-        <div className="tech-grid">
-          <div className="tech-card">
-            <div className="tech-icon-box">
+        <div className="km-about-tech-grid">
+
+          {/* MACHINE LEARNING */}
+
+          <article className="km-about-tech-card">
+
+            <div className="km-about-tech-icon">
               <Cpu size={20} />
             </div>
-            <h4>Empirical Machine Learning</h4>
-            <p>
-              Utilizes a Scikit-Learn Random Forest Classifier rigorously trained on multi-regional
-              agricultural datasets to provide high-accuracy crop predictions.
-            </p>
-          </div>
 
-          <div className="tech-card">
-            <div className="tech-icon-box">
+            <h3>
+              {t(
+                "about.tech.cards.ml.title",
+                "Machine Learning"
+              )}
+            </h3>
+
+            <p>
+              {t(
+                "about.tech.cards.ml.text",
+                "Machine learning models are used for agriculture-related prediction and recommendation tasks."
+              )}
+            </p>
+
+          </article>
+
+          {/* AGRICULTURAL DATA */}
+
+          <article className="km-about-tech-card">
+
+            <div className="km-about-tech-icon">
               <Database size={20} />
             </div>
-            <h4>Official Government Open Data</h4>
-            <p>
-              Consumes real-time wholesale arrival records directly from the Government of India Open
-              Government Data (OGD) Agmarknet repository.
-            </p>
-          </div>
 
-          <div className="tech-card">
-            <div className="tech-icon-box">
+            <h3>
+              {t(
+                "about.tech.cards.data.title",
+                "Agricultural Data"
+              )}
+            </h3>
+
+            <p>
+              {t(
+                "about.tech.cards.data.text",
+                "Agricultural datasets and relevant data sources support the platform's information and models."
+              )}
+            </p>
+
+          </article>
+
+          {/* BACKEND */}
+
+          <article className="km-about-tech-card">
+
+            <div className="km-about-tech-icon">
               <FlaskConical size={20} />
             </div>
-            <h4>High-Speed FastAPI Backend</h4>
-            <p>
-              Asynchronous Python backend with structured Pydantic data validation, automated in-memory
-              caching, and sub-100ms response latencies.
-            </p>
-          </div>
 
-          <div className="tech-card">
-            <div className="tech-icon-box">
+            <h3>
+              {t(
+                "about.tech.cards.backend.title",
+                "FastAPI Backend"
+              )}
+            </h3>
+
+            <p>
+              {t(
+                "about.tech.cards.backend.text",
+                "The Python backend connects the frontend with models, APIs and application services."
+              )}
+            </p>
+
+          </article>
+
+          {/* FRONTEND */}
+
+          <article className="km-about-tech-card">
+
+            <div className="km-about-tech-icon">
               <Users size={20} />
             </div>
-            <h4>Modern Responsive Frontend</h4>
+
+            <h3>
+              {t(
+                "about.tech.cards.frontend.title",
+                "Modern Web Interface"
+              )}
+            </h3>
+
             <p>
-              Component-based React single-page application engineered with accessible HTML semantics,
-              internationalization (i18n), and fluid responsive layouts.
+              {t(
+                "about.tech.cards.frontend.text",
+                "A responsive React interface provides a simple experience across different devices."
+              )}
             </p>
-          </div>
+
+          </article>
+
         </div>
+
       </section>
 
-      {/* ================= 6. CLOSING CTA BANNER ================= */}
-      <section className="about-cta-banner">
-        <div className="about-cta-content">
-          <h2>Ready to Explore KrishiMitra AI?</h2>
+      {/* ================= CTA ================= */}
+
+      <section className="km-about-cta">
+
+        <div>
+
+          <span className="km-about-cta-label">
+            {t(
+              "about.ctaTag",
+              "Start Exploring"
+            )}
+          </span>
+
+          <h2>
+            {t(
+              "about.ctaTitle",
+              "Explore smarter agriculture with KrishiMitra AI."
+            )}
+          </h2>
+
           <p>
-            Start utilizing data-driven crop recommendations and live mandi market pricing to make
-            informed agricultural decisions for your field today.
+            {t(
+              "about.ctaText",
+              "Discover agricultural tools, information and AI-powered assistance in one place."
+            )}
           </p>
+
         </div>
 
-        <div className="about-cta-actions">
-          <Link to="/" className="about-cta-btn primary">
-            <span>Back to Home</span>
-          </Link>
-        </div>
+        <Link
+          to="/"
+          className="km-about-cta-button"
+        >
+          {t(
+            "about.ctaButton",
+            "Go to Home"
+          )}
+
+          <ArrowRight size={18} />
+        </Link>
+
       </section>
+
     </main>
+  );
+}
+
+function CheckCircleIcon() {
+  return (
+    <span className="km-about-small-check">
+      ✓
+    </span>
   );
 }
 

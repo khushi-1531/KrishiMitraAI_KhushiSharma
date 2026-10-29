@@ -1,765 +1,588 @@
-/* ==========================================================================
-   KRISHIMITRA AI - ABOUT US PAGE STYLING
-   Theme: Light Pistachio & Soft Mint Agricultural Design
-   ========================================================================== */
+/* =========================================================
+   KRISHIMITRA AI — ABOUT PAGE
+   Fully Scoped Styles
+   Prefix: km-about-
+   ========================================================= */
 
-.about-page-wrapper {
-  width: calc(100% - 40px);
-  max-width: 1450px;
-  margin: 28px auto 70px;
-  display: flex;
-  flex-direction: column;
-  gap: 44px;
+.km-about-page {
+  width: min(1440px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 24px 0 70px;
+  color: #24352b;
 }
 
-/* =========================
-   BREADCRUMB & HEADER
-   ========================= */
+/* =========================================================
+   COMMON
+   ========================================================= */
 
-.about-header-container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  position: relative;
+.km-about-section {
+  padding: 100px 25px 20px;
 }
 
-.about-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
+.km-about-heading {
+  max-width: 700px;
+  margin: 0 auto 48px;
+  text-align: center;
 }
 
-.about-breadcrumb .breadcrumb-link {
+.km-about-heading h2 {
+  color: #174a35;
+  font-size: clamp(30px, 3.4vw, 43px);
+  line-height: 1.15;
+  margin: 16px 0 13px;
+  letter-spacing: -0.035em;
+}
+
+.km-about-heading p {
+  color: #718078;
+  font-size: 15px;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.km-about-label {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  color: #4d6854;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.about-breadcrumb .breadcrumb-link:hover {
-  color: #176d33;
-}
-
-.about-breadcrumb .breadcrumb-separator {
-  color: #9cb3a2;
-}
-
-.about-breadcrumb .breadcrumb-current {
-  font-weight: 600;
-  color: #142c1c;
-}
-
-.about-title-section {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.about-badge-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  background: #eaf6ee;
-  color: #1d7b39;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 5px 14px;
-  border-radius: 24px;
-  border: 1px solid #c9e6d2;
   width: fit-content;
-  box-shadow: 0 2px 6px rgba(29, 123, 57, 0.06);
-}
-
-.about-title-section h1 {
-  font-size: 38px;
-  font-weight: 700;
-  color: #102919;
-  line-height: 1.25;
-  margin: 0;
-  letter-spacing: -0.02em;
-}
-
-.about-lead-text {
-  font-size: 17px;
-  color: #425848;
-  max-width: 920px;
-  line-height: 1.65;
-  margin: 0;
-}
-
-/* =========================
-   HERO / STORY SECTION
-   ========================= */
-
-.about-story-card {
-  position: relative;
-  background: linear-gradient(145deg, #ffffff 0%, #f4faf6 100%);
-  border: 1px solid #dcece0;
-  border-radius: 24px;
-  padding: 40px;
-  box-shadow: 0 6px 28px rgba(25, 60, 35, 0.05);
-  display: grid;
-  grid-template-columns: 1.25fr 0.75fr;
-  gap: 40px;
-  align-items: center;
-  overflow: hidden;
-}
-
-.story-watermark-leaves {
-  position: absolute;
-  top: -20px;
-  right: -20px;
-  width: 280px;
-  height: auto;
-  opacity: 0.12;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.about-story-text {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.about-story-text .section-tag {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #1d7b39;
-}
-
-.about-story-text h2 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #102919;
-  line-height: 1.3;
-  margin: 0;
-}
-
-.about-story-text p {
-  font-size: 15px;
-  color: #43594a;
-  line-height: 1.65;
-  margin: 0;
-}
-
-.about-story-highlights {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 4px;
-}
-
-.highlight-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: 14.5px;
-  color: #1e3827;
-  line-height: 1.45;
-}
-
-.highlight-icon {
-  color: #1d7b39;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.about-story-visual {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.farmer-image-frame {
-  width: 100%;
-  max-width: 420px;
-  background: linear-gradient(150deg, #edf7f1 0%, #dff2e5 100%);
-  border: 2px solid #cfe6d6;
-  border-radius: 20px;
-  padding: 16px;
-  box-shadow: 0 12px 32px rgba(23, 65, 35, 0.08);
-  display: flex;
-  justify-content: center;
-}
-
-.farmer-image-frame img {
-  width: 100%;
-  height: auto;
-  max-height: 380px;
-  object-fit: contain;
-  border-radius: 12px;
-  transition: transform 0.3s ease;
-}
-
-.farmer-image-frame:hover img {
-  transform: scale(1.02);
-}
-
-.story-floating-badge {
-  position: absolute;
-  bottom: -16px;
-  background: #ffffff;
-  border: 1px solid #c9e4d1;
-  border-radius: 16px;
-  padding: 11px 20px;
-  box-shadow: 0 8px 24px rgba(20, 60, 30, 0.12);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.floating-badge-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  background: #e8f5ec;
-  color: #1d7b39;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.floating-badge-content {
-  display: flex;
-  flex-direction: column;
-}
-
-.floating-badge-title {
-  font-size: 13.5px;
-  font-weight: 700;
-  color: #122c1b;
-}
-
-.floating-badge-sub {
-  font-size: 11.5px;
-  color: #526f5b;
-}
-
-/* =========================
-   SECTIONS COMMON HEADER
-   ========================= */
-
-.about-section {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.section-header {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.section-header .section-tag {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #1d7b39;
-}
-
-.section-header h2 {
-  font-size: 27px;
-  font-weight: 700;
-  color: #102919;
-  margin: 0;
-}
-
-.section-header p {
-  font-size: 15px;
-  color: #4f6756;
-  margin: 0;
-  max-width: 800px;
-  line-height: 1.55;
-}
-
-/* =========================
-   PURPOSE SECTION
-   ========================= */
-
-.purpose-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.purpose-card {
-  background: #ffffff;
-  border: 1px solid #dcece0;
-  border-radius: 20px;
-  padding: 28px 24px;
-  box-shadow: 0 4px 16px rgba(25, 60, 35, 0.03);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.purpose-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(25, 60, 35, 0.08);
-  border-color: #badcc4;
-}
-
-.purpose-icon-box {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  background: #eaf6ee;
-  color: #197034;
-  border: 1px solid #d1ebd8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.purpose-card h3 {
-  font-size: 18.5px;
-  font-weight: 700;
-  color: #122c1b;
-  margin: 0;
-}
-
-.purpose-card p {
-  font-size: 14px;
-  color: #496150;
-  line-height: 1.6;
-  margin: 0;
-}
-
-/* ==========================================================================
-   WHAT KRISHIMITRA AI PROVIDES (INFORMATION-ONLY SERVICE CARDS)
-   ========================================================================== */
-
-.services-grid-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
-}
-
-/* Non-clickable Information Card */
-.about-service-card {
-  background: #ffffff;
-  border: 1px solid #dbeae0;
-  border-radius: 20px;
-  padding: 24px;
-  box-shadow: 0 4px 18px rgba(25, 60, 35, 0.04);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 16px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  cursor: default; /* Information-only, no pointer */
-}
-
-.about-service-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(25, 60, 35, 0.07);
-  border-color: #badcc4;
-}
-
-.service-card-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.service-icon-img {
-  width: 52px;
-  height: 52px;
-  object-fit: contain;
-  border-radius: 14px;
-  padding: 6px;
-  background: #f1f8f3;
-  border: 1px solid #ddecde;
-}
-
-.service-status-pill {
-  font-size: 11.5px;
-  font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 12px;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-
-.service-status-pill.operational {
-  background: #e3f5e8;
-  color: #176d31;
-  border: 1px solid #bce4c7;
-}
-
-.service-status-pill.capability {
-  background: #edf6f0;
-  color: #2e6640;
-  border: 1px solid #cde4d3;
-}
-
-.service-card-body {
-  display: flex;
-  flex-direction: column;
   gap: 8px;
-}
-
-.service-card-body h4 {
-  font-size: 18px;
-  font-weight: 700;
-  color: #122c1b;
-  margin: 0;
-}
-
-.service-card-body p {
-  font-size: 13.5px;
-  color: #496150;
-  line-height: 1.55;
-  margin: 0;
-}
-
-/* Informational Card Footer (No links or buttons) */
-.service-card-footer {
-  padding-top: 12px;
-  border-top: 1px solid #f0f6f2;
-}
-
-.service-info-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  color: #47715a;
+  background: #e4eee3;
+  border-radius: 100px;
+  padding: 8px 14px;
   font-size: 12px;
-  font-weight: 600;
-  color: #276239;
-  background: #f3faf5;
-  padding: 5px 10px;
-  border-radius: 8px;
-  border: 1px solid #dcefe1;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-/* =========================
-   FARMER-CENTRIC APPROACH
-   ========================= */
+/* =========================================================
+   STORY
+   ========================================================= */
 
-.farmer-centric-grid {
+.km-about-story {
+  max-width: 1150px;
+  margin: 95px auto 0;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 70px;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.km-about-story-image {
+  height: 530px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #e8eee3;
+}
+
+.km-about-story-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.km-about-story-content h2 {
+  color: #174a35;
+  font-size: clamp(31px, 3.5vw, 45px);
+  line-height: 1.15;
+  margin: 18px 0;
+  letter-spacing: -0.035em;
+}
+
+.km-about-story-content > p {
+  color: #6e7b73;
+  font-size: 15px;
+  line-height: 1.85;
+  margin-bottom: 15px;
+}
+
+.km-about-story-points {
+  margin-top: 28px;
+}
+
+.km-about-story-points > div {
+  display: flex;
+  gap: 15px;
+  padding: 15px 0;
+  border-top: 1px solid #e5e6df;
+}
+
+.km-about-story-points > div:last-child {
+  border-bottom: 1px solid #e5e6df;
+}
+
+.km-about-point-number {
+  color: #789b7d;
+  font-size: 12px;
+  font-weight: 800;
+  padding-top: 3px;
+}
+
+.km-about-story-points h4 {
+  color: #304b3a;
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+.km-about-story-points p {
+  color: #7a867f;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   PURPOSE
+   ========================================================= */
+
+.km-about-purpose-grid {
+  max-width: 1150px;
+  margin: auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.centric-card {
-  background: #ffffff;
-  border: 1px solid #dcece0;
-  border-radius: 20px;
-  padding: 28px 24px;
-  box-shadow: 0 4px 16px rgba(25, 60, 35, 0.03);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.centric-icon-box {
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
-  background: #eaf6ee;
-  color: #1a7436;
-  border: 1px solid #cde7d4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.centric-card h3 {
-  font-size: 18px;
-  font-weight: 700;
-  color: #122c1b;
-  margin: 0;
-}
-
-.centric-card p {
-  font-size: 14px;
-  color: #496150;
-  line-height: 1.6;
-  margin: 0;
-}
-
-.language-chips-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
-}
-
-.lang-chip {
-  background: #f3faf5;
-  color: #1f6432;
-  border: 1px solid #d0e7d6;
-  font-size: 11.5px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 6px;
-}
-
-/* =========================
-   TECHNOLOGY & ARCHITECTURE
-   ========================= */
-
-.tech-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
 }
 
-.tech-card {
-  background: #ffffff;
-  border: 1px solid #dcece0;
-  border-radius: 18px;
-  padding: 24px 20px;
+.km-about-purpose-card {
+  position: relative;
+  padding: 30px;
+  min-height: 245px;
+  background: white;
+  border: 1px solid #e2e6df;
+  border-radius: 15px;
+  transition: 0.25s ease;
+}
+
+.km-about-purpose-card:hover {
+  border-color: #b8ccb8;
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(38, 65, 46, 0.08);
+}
+
+.km-about-purpose-icon {
+  width: 45px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  color: #37684d;
+  background: #e8f0e5;
+  border-radius: 10px;
+}
+
+.km-about-card-number {
+  position: absolute;
+  right: 25px;
+  top: 28px;
+  color: #d3ddd0;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.km-about-purpose-card h3 {
+  color: #294737;
+  font-size: 18px;
+  margin: 23px 0 10px;
+}
+
+.km-about-purpose-card p {
+  color: #758078;
+  font-size: 13px;
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* =========================================================
+   SERVICES
+   ========================================================= */
+
+.km-about-services-section {
+  background: #f7f5ed;
+  margin-top: 90px;
+  border-radius: 24px;
+  padding-bottom: 70px;
+}
+
+.km-about-services-grid {
+  max-width: 1150px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.km-about-service-card {
+  overflow: hidden;
+  background: white;
+  border: 1px solid #e1e5dc;
+  border-radius: 15px;
+  transition: 0.25s ease;
+}
+
+.km-about-service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 35px rgba(35, 60, 42, 0.09);
+}
+
+.km-about-service-image {
+  position: relative;
+  height: 175px;
+  background: #edf1e8;
+  overflow: hidden;
+}
+
+.km-about-service-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.3s ease;
+}
+
+.km-about-service-card:hover .km-about-service-image img {
+  transform: scale(1.04);
+}
+
+.km-about-service-icon {
+  position: absolute;
+  left: 16px;
+  bottom: 15px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  color: #28553d;
+  background: white;
+  border-radius: 9px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.09);
+}
+
+.km-about-service-content {
+  padding: 22px;
+}
+
+.km-about-service-label {
+  color: #739078;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.km-about-service-content h3 {
+  color: #294737;
+  font-size: 18px;
+  margin: 9px 0;
+}
+
+.km-about-service-content p {
+  color: #758078;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.km-about-service-meta {
+  margin-top: 17px;
+  padding-top: 13px;
+  border-top: 1px solid #edf0ea;
+  color: #5d7764;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   FARMER SECTION
+   ========================================================= */
+
+.km-about-farmer-section {
+  margin-top: 100px;
+  padding: 80px 25px;
+  background: #e8f0e5;
+  border-radius: 24px;
+}
+
+.km-about-farmer-heading {
+  margin-bottom: 42px;
+}
+
+.km-about-farmer-grid {
+  max-width: 1150px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.km-about-farmer-feature {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(84, 113, 91, 0.15);
+  border-radius: 15px;
+  padding: 28px;
+}
+
+.km-about-feature-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  color: #356149;
+  background: white;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.km-about-farmer-feature h3 {
+  color: #294737;
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+
+.km-about-farmer-feature > p {
+  color: #6f7d74;
+  font-size: 13px;
+  line-height: 1.75;
+  margin: 0 0 20px;
+}
+
+.km-about-language-list {
   display: flex;
-  flex-direction: column;
-  gap: 13px;
-  box-shadow: 0 3px 14px rgba(25, 60, 35, 0.03);
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  flex-wrap: wrap;
+  gap: 7px;
 }
 
-.tech-card:hover {
-  transform: translateY(-2px);
-  border-color: #badcc4;
+.km-about-language-list span {
+  padding: 6px 9px;
+  background: white;
+  border: 1px solid #dce5d8;
+  border-radius: 7px;
+  color: #54705b;
+  font-size: 11px;
 }
 
-.tech-icon-box {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: #eaf6ee;
-  color: #1d7b39;
-  border: 1px solid #d0e8d6;
+.km-about-feature-line {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  gap: 8px;
+  color: #61746a;
+  font-size: 12px;
+  margin-top: 11px;
 }
 
-.tech-card h4 {
-  font-size: 16.5px;
-  font-weight: 700;
-  color: #122c1b;
+.km-about-small-check {
+  width: 19px;
+  height: 19px;
+  display: grid;
+  place-items: center;
+  background: #dcead9;
+  color: #3e704f;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* =========================================================
+   TECHNOLOGY
+   ========================================================= */
+
+.km-about-tech-grid {
+  max-width: 1050px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.km-about-tech-card {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  column-gap: 17px;
+  padding: 25px;
+  background: white;
+  border: 1px solid #e2e6df;
+  border-radius: 14px;
+}
+
+.km-about-tech-icon {
+  grid-row: span 2;
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  color: #356149;
+  background: #e8f0e5;
+  border-radius: 9px;
+}
+
+.km-about-tech-card h3 {
+  color: #304b3a;
+  font-size: 16px;
+  margin: 1px 0 7px;
+}
+
+.km-about-tech-card p {
+  color: #78847d;
+  font-size: 12px;
+  line-height: 1.7;
   margin: 0;
 }
 
-.tech-card p {
-  font-size: 13px;
-  color: #4c6453;
-  line-height: 1.55;
-  margin: 0;
-}
+/* =========================================================
+   CTA
+   ========================================================= */
 
-/* ==========================================================================
-   CLOSING CTA BANNER (KEPT WITH 3 WORKING BUTTONS)
-   ========================================================================== */
-
-.about-cta-banner {
-  background: linear-gradient(135deg, #113a1e 0%, #1a572c 100%);
-  border-radius: 22px;
-  padding: 44px 40px;
-  color: #ffffff;
+.km-about-cta {
+  max-width: 1150px;
+  margin: 100px auto 0;
+  padding: 42px 45px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 32px;
-  box-shadow: 0 10px 32px rgba(17, 58, 30, 0.22);
+  gap: 30px;
+  background: #174a35;
+  border-radius: 20px;
 }
 
-.about-cta-content {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-width: 680px;
-}
-
-.about-cta-content h2 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0;
-}
-
-.about-cta-content p {
-  font-size: 15.5px;
-  color: #d1ebd8;
-  line-height: 1.6;
-  margin: 0;
-}
-
-.about-cta-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
-}
-
-.about-cta-btn {
+.km-about-cta-label {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.about-cta-btn.primary {
-  background: #ffffff;
-  color: #113a1e;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-}
-
-.about-cta-btn.primary:hover {
-  background: #f1f8f3;
-  transform: translateY(-1px);
-}
-
-.about-cta-btn.secondary {
-  background: rgba(255, 255, 255, 0.16);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-}
-
-.about-cta-btn.secondary:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: translateY(-1px);
-}
-
-.about-cta-btn.outline {
-  background: transparent;
-  color: #e2f5e7;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-}
-
-.about-cta-btn.outline:hover {
-  color: #ffffff;
+  width: fit-content;
+  color: #d6e8d8;
   background: rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-/* =========================
-   RESPONSIVE DESIGN
-   ========================= */
+.km-about-cta h2 {
+  max-width: 650px;
+  color: white;
+  font-size: clamp(25px, 3vw, 37px);
+  line-height: 1.2;
+  margin: 15px 0 10px;
+}
 
-@media (max-width: 1200px) {
-  .tech-grid {
+.km-about-cta p {
+  max-width: 620px;
+  color: #c5d5ca;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.km-about-cta-button {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 18px;
+  background: white;
+  color: #174a35;
+  text-decoration: none;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 800;
+  transition: 0.25s ease;
+}
+
+.km-about-cta-button:hover {
+  background: #edf3ea;
+  transform: translateY(-2px);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1050px) {
+  .km-about-story {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    max-width: 750px;
+  }
+
+  .km-about-story-image {
+    height: 400px;
+  }
+
+  .km-about-purpose-grid,
+  .km-about-services-grid,
+  .km-about-farmer-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .km-about-cta {
+    margin-left: 20px;
+    margin-right: 20px;
   }
 }
 
-@media (max-width: 1024px) {
-  .about-story-card {
-    grid-template-columns: 1fr;
-    padding: 32px 28px;
-    gap: 30px;
+@media (max-width: 700px) {
+  .km-about-page {
+    width: min(100% - 22px, 1440px);
+    padding-top: 12px;
   }
 
-  .about-story-visual {
-    order: -1;
+  .km-about-section {
+    padding-top: 75px;
   }
 
-  .farmer-image-frame {
-    max-width: 340px;
-  }
-
-  .purpose-grid,
-  .farmer-centric-grid {
+  .km-about-purpose-grid,
+  .km-about-services-grid,
+  .km-about-farmer-grid,
+  .km-about-tech-grid {
     grid-template-columns: 1fr;
   }
 
-  .services-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .km-about-services-section {
+    margin-top: 65px;
+    padding: 60px 15px;
   }
 
-  .about-cta-banner {
+  .km-about-farmer-section {
+    margin-top: 70px;
+    padding: 60px 15px;
+  }
+
+  .km-about-story {
+    margin-top: 65px;
+    padding: 0 5px;
+  }
+
+  .km-about-story-image {
+    height: 320px;
+  }
+
+  .km-about-cta {
+    margin-top: 70px;
+    padding: 32px 25px;
     flex-direction: column;
     align-items: flex-start;
-    padding: 32px 28px;
   }
 
-  .about-cta-actions {
+  .km-about-cta-button {
     width: 100%;
-  }
-
-  .about-cta-btn {
-    flex: 1 1 auto;
-    text-align: center;
+    justify-content: center;
   }
 }
 
-@media (max-width: 768px) {
-  .about-page-wrapper {
-    width: calc(100% - 24px);
-    margin-top: 18px;
-    gap: 32px;
+@media (max-width: 430px) {
+  .km-about-page {
+    width: min(100% - 16px, 1440px);
   }
 
-  .about-title-section h1 {
-    font-size: 28px;
+  .km-about-story-image {
+    height: 290px;
   }
 
-  .about-lead-text {
-    font-size: 15px;
+  .km-about-purpose-card,
+  .km-about-farmer-feature {
+    padding: 24px;
   }
 
-  .services-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .tech-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .about-story-card {
-    padding: 24px 20px;
-  }
-
-  .about-story-text h2 {
-    font-size: 23px;
-  }
-
-  .story-floating-badge {
-    position: static;
-    margin-top: 14px;
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .about-cta-actions {
-    flex-direction: column;
-  }
-
-  .about-cta-btn {
-    width: 100%;
+  .km-about-cta {
+    padding: 28px 20px;
   }
 }

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://127.0.0.1:8001/api/v1';
+const API_BASE_URL = 'http://127.0.0.1:8000';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -12,7 +12,7 @@ const apiClient = axios.create({
 
 /**
  * Fetch wholesale mandi prices across Indian markets from the backend API.
- * 
+ *
  * @param {Object} params - Query filters: { state, district, market, commodity, variety, arrival_date, limit, offset }
  * @returns {Promise<Object>} API response: { status, total, count, limit, offset, updated_date, records }
  */
@@ -59,7 +59,7 @@ export const fetchMarketPrices = async (params = {}) => {
       throw new Error(message, { cause: error });
     } else if (error.request) {
       throw new Error(
-        'Unable to connect to KrishiMitraAI API server at http://127.0.0.1:8001. Please verify that the FastAPI backend is running.',
+        'Unable to connect to the KrishiMitra AI backend at http://127.0.0.1:8000. Please verify that the FastAPI backend is running.',
         { cause: error }
       );
     } else {

@@ -1,43 +1,47 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import WeatherForecast from "./pages/WeatherForecast";
+import ChatBot from "./components/chatbot/ChatBot";
 import CropRecommendation from "./pages/CropRecommendation";
-import MarketPrices from "./pages/MarketPrices";
 import About from "./pages/About";
 import Services from "./pages/Services";
-import Resources from "./pages/Resources";
 import Contact from "./pages/Contact";
 import YieldPrediction from "./pages/YieldPrediction";
+import InsightDetail from "./pages/InsightDetail";
+import MarketPrices from "./pages/MarketPrices";
+import SoilAnalysis from "./pages/SoilAnalysis";
+import DiseaseDetection from "./pages/DiseaseDetection";
 
-function DiseaseDetection() {
-  const { t } = useTranslation();
-  return (
-    <div className="page-placeholder">
-      <h1>{t("services.diseaseDetection.title", "Disease Detection")}</h1>
-      <p>{t("services.diseaseDetection.description", "Upload leaf images and detect diseases early with AI.")}</p>
-      <Link to="/" style={{ color: "#1d7136", fontWeight: 600, marginTop: "8px", textDecoration: "none" }}>
-        ← {t("navbar.home", "Back to Home")}
-      </Link>
-    </div>
-  );
-}
-
-function WeatherForecast() {
-  const { t } = useTranslation();
-  return (
-    <div className="page-placeholder">
-      <h1>{t("services.weather.title", "Weather Forecast")}</h1>
-      <p>{t("services.weather.description", "Get weather updates and forecasts for your location.")}</p>
-      <Link to="/" style={{ color: "#1d7136", fontWeight: 600, marginTop: "8px", textDecoration: "none" }}>
-        ← {t("navbar.home", "Back to Home")}
-      </Link>
-    </div>
-  );
-}
+import { useEffect } from "react";          // useEffect add (useState pehle se hai)
+import ProtectedRoute from "./components/ProtectedRoute";
+import { isLoggedIn } from "./utils/auth";
 
 function App() {
+  const [isChatOpen, setIsChatOpen] = useState(() => {
+    try {
+      return isLoggedIn() && sessionStorage.getItem("open_chat_after_login") === "1";
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      sessionStorage.removeItem("open_chat_after_login");
+    } catch { /* ignore */ }
+  }, []);
+
+  const openChat = () => {
+    setIsChatOpen(true);
+  };
+
   return (
     <BrowserRouter>
 
@@ -45,57 +49,53 @@ function App() {
 
       <Routes>
 
-        <Route path="/" element={<Home />} />
+        <Route path="/"element={<Home onOpenChat={openChat} />}/>
 
-        <Route
-          path="/crop-recommendation"
-          element={<CropRecommendation />}
-        />
+        <Route path="/login" element={<Login />} />
 
-        <Route
-          path="/disease-detection"
-          element={<DiseaseDetection />}
-        />
+        <Route path="/signup" element={<Signup />} />
 
-        <Route
-          path="/weather-forecast"
-          element={<WeatherForecast />}
-        />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        <Route
-          path="/yield-prediction"
-          element={<YieldPrediction />}
-        />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
-        <Route
-          path="/market-prices"
-          element={<MarketPrices />}
-        />
+        {/* <Route path="/weather" element={<WeatherForecast />} />
 
-        <Route
-          path="/about"
-          element={<About />}
-        />
+        <Route path="/crop-recommendation" element={<CropRecommendation />}/>
 
-        <Route
-          path="/services"
-          element={<Services />}
-        />
+        <Route path="/disease-detection" element={<DiseaseDetection />} />
 
-        <Route
-          path="/resources"
-          element={<Resources />}
-        />
+        <Route  path="/yield-prediction"  element={<YieldPrediction />}  />
 
-        <Route
-          path="/contact"
-          element={<Contact />}
-        />
+        <Route path="/market-prices" element={<MarketPrices />} />
+
+        <Route path="/soil-analysis" element={<SoilAnalysis />} /> */}
+
+        <Route path="/about" element={<About />} />
+
+        <Route path="/services" element={<Services />}/>
+
+        <Route path="/contact" element={<Contact />}/>
+
+        <Route path="/insights/:topic" element={<InsightDetail />} />
+
+        <Route path="/weather" element={<ProtectedRoute><WeatherForecast /></ProtectedRoute>} />
+        <Route path="/crop-recommendation" element={<ProtectedRoute><CropRecommendation /></ProtectedRoute>} />
+        <Route path="/yield-prediction" element={<ProtectedRoute><YieldPrediction /></ProtectedRoute>} />
+        <Route path="/market-prices" element={<ProtectedRoute><MarketPrices /></ProtectedRoute>} />
+        <Route path="/soil-analysis" element={<ProtectedRoute><SoilAnalysis /></ProtectedRoute>} />
+        <Route path="/disease-detection" element={<ProtectedRoute><DiseaseDetection /></ProtectedRoute>} />
 
       </Routes>
+
+      {/* Global AI Chatbot */}
+      <ChatBot
+        isOpen={isChatOpen}
+        setIsOpen={setIsChatOpen}
+      />
 
     </BrowserRouter>
   );
 }
 
-export default App;
+export default App;

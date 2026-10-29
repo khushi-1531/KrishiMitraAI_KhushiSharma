@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
-  ArrowLeft,
   Search,
   RotateCcw,
   TrendingUp,
@@ -17,6 +15,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import { fetchMarketPrices } from "../services/marketApi";
+import "./MarketPrices.css";
 
 const QUICK_COMMODITIES = [
   "Wheat",
@@ -41,6 +40,7 @@ const INITIAL_FILTERS = {
 
 function MarketPrices() {
   const { t } = useTranslation();
+
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [activeFilters, setActiveFilters] = useState(INITIAL_FILTERS);
   const [limit, setLimit] = useState(20);
@@ -48,16 +48,19 @@ function MarketPrices() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const [data, setData] = useState({
     records: [],
     total: 0,
     count: 0,
     updated_date: null,
   });
+
   const [refreshIndex, setRefreshIndex] = useState(0);
 
   useEffect(() => {
     let ignore = false;
+
     fetchMarketPrices({
       ...activeFilters,
       limit,
@@ -71,13 +74,20 @@ function MarketPrices() {
             count: res.count || 0,
             updated_date: res.updated_date || null,
           });
+
           setError(null);
           setLoading(false);
         }
       })
       .catch((err) => {
         if (!ignore) {
-          setError(err.message || "Failed to retrieve market prices. Please try again.");
+          setError(
+            err.message ||
+              t(
+                "services.marketPrices.defaultApiError",
+                "Failed to retrieve market prices. Please try again."
+              )
+          );
           setLoading(false);
         }
       });
@@ -85,22 +95,31 @@ function MarketPrices() {
     return () => {
       ignore = true;
     };
-  }, [activeFilters, limit, offset, refreshIndex]);
+  }, [activeFilters, limit, offset, refreshIndex, t]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
+
+    setFilters((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSearch = (e) => {
     e?.preventDefault();
+
     setLoading(true);
     setOffset(0);
     setActiveFilters({ ...filters });
   };
 
   const handleQuickCommodity = (commodityName) => {
-    const updated = { ...filters, commodity: commodityName };
+    const updated = {
+      ...filters,
+      commodity: commodityName,
+    };
+
     setFilters(updated);
     setLoading(true);
     setOffset(0);
@@ -118,12 +137,17 @@ function MarketPrices() {
     if (newOffset >= 0 && newOffset < data.total) {
       setLoading(true);
       setOffset(newOffset);
-      window.scrollTo({ top: 300, behavior: "smooth" });
+
+      window.scrollTo({
+        top: 300,
+        behavior: "smooth",
+      });
     }
   };
 
   const currentPage = Math.floor(offset / limit) + 1;
   const totalPages = Math.max(1, Math.ceil(data.total / limit));
+
   const showingStart = data.total > 0 ? offset + 1 : 0;
   const showingEnd = Math.min(offset + limit, data.total);
 
@@ -131,21 +155,30 @@ function MarketPrices() {
     <div className="market-page-wrapper">
       {/* Top Header & Breadcrumb */}
       <div className="market-header-section">
-        <div className="market-nav-back">
-          <Link to="/" className="back-link">
-            <ArrowLeft size={16} />
-            <span>{t("navbar.home", "Back to Home")}</span>
-          </Link>
-        </div>
-
         <div className="market-title-group">
           <div className="live-badge">
             <span className="pulse-dot"></span>
-            <span>Live Government Agmarknet Data</span>
+
+            <span>
+              {t(
+                "services.marketPrices.liveData",
+                "Live Government Agmarknet Data"
+              )}
+            </span>
           </div>
-          <h1>{t("services.marketPrices.title", "Daily Mandi Market Prices")}</h1>
+
+          <h1>
+            {t(
+              "services.marketPrices.title",
+              "Daily Mandi Market Prices"
+            )}
+          </h1>
+
           <p className="market-subtitle">
-            Real-time wholesale agricultural commodity rates across mandis in India from official government data.
+            {t(
+              "services.marketPrices.description",
+              "Real-time wholesale agricultural commodity rates across mandis in India from official government data."
+            )}
           </p>
         </div>
       </div>
@@ -155,8 +188,15 @@ function MarketPrices() {
         <div className="filter-header">
           <div className="filter-title-group">
             <Filter size={18} className="filter-icon" />
-            <h2>Search & Filter Mandis</h2>
+
+            <h2>
+              {t(
+                "services.marketPrices.searchFilter",
+                "Search & Filter Mandis"
+              )}
+            </h2>
           </div>
+
           <button
             type="button"
             className="reset-filters-btn"
@@ -164,24 +204,38 @@ function MarketPrices() {
             disabled={loading}
           >
             <RotateCcw size={14} />
-            <span>Reset</span>
+
+            <span>
+              {t("services.marketPrices.reset", "Reset")}
+            </span>
           </button>
         </div>
 
         {/* Quick commodity pills */}
         <div className="quick-commodities-row">
-          <span className="quick-label">Popular Commodities:</span>
+          <span className="quick-label">
+            {t(
+              "services.marketPrices.popularCommodities",
+              "Popular Commodities:"
+            )}
+          </span>
+
           <div className="commodity-chips">
             {QUICK_COMMODITIES.map((item) => (
               <button
                 key={item}
                 type="button"
                 className={`commodity-chip ${
-                  filters.commodity.toLowerCase() === item.toLowerCase() ? "active" : ""
+                  filters.commodity.toLowerCase() === item.toLowerCase()
+                    ? "active"
+                    : ""
                 }`}
                 onClick={() => handleQuickCommodity(item)}
               >
-                {item}
+                {t(
+                  `services.marketPrices.commodities.${item}`,
+                  item
+                )}
               </button>
             ))}
           </div>
@@ -189,60 +243,104 @@ function MarketPrices() {
 
         <form onSubmit={handleSearch} className="filter-form">
           <div className="filter-grid">
+            {/* Commodity */}
             <div className="filter-field">
-              <label htmlFor="commodity">Commodity</label>
+              <label htmlFor="commodity">
+                {t(
+                  "services.marketPrices.commodity",
+                  "Commodity"
+                )}
+              </label>
+
               <div className="filter-input-wrap">
                 <ShoppingBag size={16} className="input-icon" />
+
                 <input
                   type="text"
                   id="commodity"
                   name="commodity"
-                  placeholder="e.g. Wheat, Potato, Onion"
+                  placeholder={t(
+                    "services.marketPrices.placeholders.commodity",
+                    "e.g. Wheat, Potato, Onion"
+                  )}
                   value={filters.commodity}
                   onChange={handleInputChange}
                 />
               </div>
             </div>
 
+            {/* State */}
             <div className="filter-field">
-              <label htmlFor="state">State / UT</label>
+              <label htmlFor="state">
+                {t(
+                  "services.marketPrices.state",
+                  "State / UT"
+                )}
+              </label>
+
               <div className="filter-input-wrap">
                 <MapPin size={16} className="input-icon" />
+
                 <input
                   type="text"
                   id="state"
                   name="state"
-                  placeholder="e.g. Punjab, Maharashtra"
+                  placeholder={t(
+                    "services.marketPrices.placeholders.state",
+                    "e.g. Punjab, Maharashtra"
+                  )}
                   value={filters.state}
                   onChange={handleInputChange}
                 />
               </div>
             </div>
 
+            {/* District */}
             <div className="filter-field">
-              <label htmlFor="district">District</label>
+              <label htmlFor="district">
+                {t(
+                  "services.marketPrices.district",
+                  "District"
+                )}
+              </label>
+
               <div className="filter-input-wrap">
                 <MapPin size={16} className="input-icon" />
+
                 <input
                   type="text"
                   id="district"
                   name="district"
-                  placeholder="e.g. Pune, Agra, Ludhiana"
+                  placeholder={t(
+                    "services.marketPrices.placeholders.district",
+                    "e.g. Pune, Agra, Ludhiana"
+                  )}
                   value={filters.district}
                   onChange={handleInputChange}
                 />
               </div>
             </div>
 
+            {/* Market */}
             <div className="filter-field">
-              <label htmlFor="market">Market / Mandi</label>
+              <label htmlFor="market">
+                {t(
+                  "services.marketPrices.market",
+                  "Market / Mandi"
+                )}
+              </label>
+
               <div className="filter-input-wrap">
                 <MapPin size={16} className="input-icon" />
+
                 <input
                   type="text"
                   id="market"
                   name="market"
-                  placeholder="e.g. Lasalgaon, Achhnera"
+                  placeholder={t(
+                    "services.marketPrices.placeholders.market",
+                    "e.g. Lasalgaon, Achhnera"
+                  )}
                   value={filters.market}
                   onChange={handleInputChange}
                 />
@@ -252,7 +350,13 @@ function MarketPrices() {
 
           <div className="filter-actions-row">
             <div className="limit-selector">
-              <label htmlFor="limit">Rows per page:</label>
+              <label htmlFor="limit">
+                {t(
+                  "services.marketPrices.rowsPerPage",
+                  "Rows per page:"
+                )}
+              </label>
+
               <select
                 id="limit"
                 value={limit}
@@ -274,13 +378,28 @@ function MarketPrices() {
             >
               {loading ? (
                 <>
-                  <RefreshCw size={16} className="spin-icon" />
-                  <span>Searching...</span>
+                  <RefreshCw
+                    size={16}
+                    className="spin-icon"
+                  />
+
+                  <span>
+                    {t(
+                      "services.marketPrices.searching",
+                      "Searching..."
+                    )}
+                  </span>
                 </>
               ) : (
                 <>
                   <Search size={16} />
-                  <span>Search Mandi Rates</span>
+
+                  <span>
+                    {t(
+                      "services.marketPrices.searchMandiRates",
+                      "Search Mandi Rates"
+                    )}
+                  </span>
                 </>
               )}
             </button>
@@ -292,10 +411,18 @@ function MarketPrices() {
       {error && (
         <div className="market-error-banner">
           <AlertCircle size={20} className="error-icon" />
+
           <div className="error-content">
-            <strong>Unable to Load Market Prices</strong>
+            <strong>
+              {t(
+                "services.marketPrices.unableToLoad",
+                "Unable to Load Market Prices"
+              )}
+            </strong>
+
             <p>{error}</p>
           </div>
+
           <button
             type="button"
             className="retry-btn"
@@ -304,7 +431,10 @@ function MarketPrices() {
               setRefreshIndex((prev) => prev + 1);
             }}
           >
-            Try Again
+            {t(
+              "services.marketPrices.tryAgain",
+              "Try Again"
+            )}
           </button>
         </div>
       )}
@@ -313,12 +443,26 @@ function MarketPrices() {
       <div className="market-stats-bar">
         <div className="stats-left">
           <span className="stats-count">
-            Showing <strong>{showingStart} - {showingEnd}</strong> of <strong>{data.total.toLocaleString()}</strong> records
+            {t("services.marketPrices.showing", "Showing")}{" "}
+            <strong>
+              {showingStart} - {showingEnd}
+            </strong>{" "}
+            {t("services.marketPrices.of", "of")}{" "}
+            <strong>{data.total.toLocaleString()}</strong>{" "}
+            {t("services.marketPrices.records", "records")}
           </span>
+
           {data.updated_date && (
             <span className="stats-timestamp">
               <Calendar size={13} />
-              Upstream updated: {new Date(data.updated_date).toLocaleDateString("en-IN", {
+
+              {t(
+                "services.marketPrices.upstreamUpdated",
+                "Upstream updated:"
+              )}{" "}
+              {new Date(
+                data.updated_date
+              ).toLocaleDateString("en-IN", {
                 day: "numeric",
                 month: "short",
                 year: "numeric",
@@ -336,10 +480,22 @@ function MarketPrices() {
               setRefreshIndex((prev) => prev + 1);
             }}
             disabled={loading}
-            title="Refresh prices"
+            title={t(
+              "services.marketPrices.refresh",
+              "Refresh prices"
+            )}
           >
-            <RefreshCw size={14} className={loading ? "spin-icon" : ""} />
-            <span>Refresh</span>
+            <RefreshCw
+              size={14}
+              className={loading ? "spin-icon" : ""}
+            />
+
+            <span>
+              {t(
+                "services.marketPrices.refresh",
+                "Refresh"
+              )}
+            </span>
           </button>
         </div>
       </div>
@@ -349,23 +505,43 @@ function MarketPrices() {
         {loading ? (
           <div className="market-loading-state">
             <div className="market-spinner"></div>
-            <p>Fetching real-time Agmarknet commodity prices from government repository...</p>
+
+            <p>
+              {t(
+                "services.marketPrices.fetchingPrices",
+                "Fetching real-time Agmarknet commodity prices from government repository..."
+              )}
+            </p>
           </div>
         ) : data.records.length === 0 ? (
           <div className="market-empty-state">
             <div className="empty-icon-circle">
               <Layers size={32} />
             </div>
-            <h3>No Mandi Price Records Found</h3>
+
+            <h3>
+              {t(
+                "services.marketPrices.noRecords",
+                "No Mandi Price Records Found"
+              )}
+            </h3>
+
             <p>
-              No market price records matched your current search filters. Try adjusting your commodity name, state, or district.
+              {t(
+                "services.marketPrices.noRecordsDescription",
+                "No market price records matched your current search filters. Try adjusting your commodity name, state, or district."
+              )}
             </p>
+
             <button
               type="button"
               className="clear-filters-btn"
               onClick={handleReset}
             >
-              Clear All Filters
+              {t(
+                "services.marketPrices.clearFilters",
+                "Clear All Filters"
+              )}
             </button>
           </div>
         ) : (
@@ -375,46 +551,128 @@ function MarketPrices() {
               <table className="mandi-table">
                 <thead>
                   <tr>
-                    <th>Commodity</th>
-                    <th>Variety / Grade</th>
-                    <th>Mandi (Market)</th>
-                    <th>District</th>
-                    <th>State</th>
-                    <th>Arrival Date</th>
-                    <th className="price-header">Min Price</th>
-                    <th className="price-header">Max Price</th>
-                    <th className="price-header modal-header">Modal Price</th>
+                    <th>
+                      {t(
+                        "services.marketPrices.commodity",
+                        "Commodity"
+                      )}
+                    </th>
+
+                    <th>
+                      {t(
+                        "services.marketPrices.variety",
+                        "Variety / Grade"
+                      )}
+                    </th>
+
+                    <th>
+                      {t(
+                        "services.marketPrices.market",
+                        "Mandi (Market)"
+                      )}
+                    </th>
+
+                    <th>
+                      {t(
+                        "services.marketPrices.district",
+                        "District"
+                      )}
+                    </th>
+
+                    <th>
+                      {t(
+                        "services.marketPrices.state",
+                        "State"
+                      )}
+                    </th>
+
+                    <th>
+                      {t(
+                        "services.marketPrices.arrivalDate",
+                        "Arrival Date"
+                      )}
+                    </th>
+
+                    <th className="price-header">
+                      {t(
+                        "services.marketPrices.minPrice",
+                        "Min Price"
+                      )}
+                    </th>
+
+                    <th className="price-header">
+                      {t(
+                        "services.marketPrices.maxPrice",
+                        "Max Price"
+                      )}
+                    </th>
+
+                    <th className="price-header modal-header">
+                      {t(
+                        "services.marketPrices.modalPrice",
+                        "Modal Price"
+                      )}
+                    </th>
                   </tr>
                 </thead>
+
                 <tbody>
                   {data.records.map((rec, index) => (
-                    <tr key={`${rec.market}-${rec.commodity}-${index}`}>
+                    <tr
+                      key={`${rec.market}-${rec.commodity}-${index}`}
+                    >
                       <td className="commodity-cell">
-                        <span className="commodity-name">{rec.commodity}</span>
+                        <span className="commodity-name">
+                          {rec.commodity}
+                        </span>
                       </td>
+
                       <td className="variety-cell">
-                        {rec.variety || "Other"}
+                        {rec.variety ||
+                          t(
+                            "services.marketPrices.other",
+                            "Other"
+                          )}
                       </td>
+
                       <td className="market-cell">
                         <strong>{rec.market}</strong>
                       </td>
+
                       <td>{rec.district}</td>
+
                       <td>{rec.state}</td>
+
                       <td className="date-cell">
                         {rec.arrival_date || "—"}
                       </td>
+
                       <td className="price-cell">
-                        {rec.min_price != null ? `₹${rec.min_price.toLocaleString()}` : "—"}
+                        {rec.min_price != null
+                          ? `₹${rec.min_price.toLocaleString()}`
+                          : "—"}
                       </td>
+
                       <td className="price-cell">
-                        {rec.max_price != null ? `₹${rec.max_price.toLocaleString()}` : "—"}
+                        {rec.max_price != null
+                          ? `₹${rec.max_price.toLocaleString()}`
+                          : "—"}
                       </td>
+
                       <td className="price-cell modal-price-cell">
                         {rec.modal_price != null ? (
                           <span className="modal-badge">
                             <TrendingUp size={12} />
+
                             ₹{rec.modal_price.toLocaleString()}
-                            <small>/qtl</small>
+
+                            <small>
+                              /
+                              {t(
+                                "services.marketPrices.quintal",
+                                "qtl"
+                              )}
+                            </small>
                           </span>
                         ) : (
                           "—"
@@ -429,41 +687,93 @@ function MarketPrices() {
             {/* Mobile Cards View */}
             <div className="mobile-cards-list">
               {data.records.map((rec, index) => (
-                <div key={`m-${rec.market}-${rec.commodity}-${index}`} className="mobile-mandi-card">
+                <div
+                  key={`m-${rec.market}-${rec.commodity}-${index}`}
+                  className="mobile-mandi-card"
+                >
                   <div className="card-top">
                     <div className="card-title-col">
-                      <span className="m-commodity">{rec.commodity}</span>
-                      <span className="m-variety">{rec.variety || "Standard Variety"}</span>
+                      <span className="m-commodity">
+                        {rec.commodity}
+                      </span>
+
+                      <span className="m-variety">
+                        {rec.variety ||
+                          t(
+                            "services.marketPrices.standardVariety",
+                            "Standard Variety"
+                          )}
+                      </span>
                     </div>
+
                     {rec.modal_price != null && (
                       <div className="m-modal-price">
-                        <span className="m-price-val">₹{rec.modal_price.toLocaleString()}</span>
-                        <span className="m-price-unit">/ Quintal</span>
+                        <span className="m-price-val">
+                          ₹{rec.modal_price.toLocaleString()}
+                        </span>
+
+                        <span className="m-price-unit">
+                          /{" "}
+                          {t(
+                            "services.marketPrices.quintal",
+                            "Quintal"
+                          )}
+                        </span>
                       </div>
                     )}
                   </div>
 
                   <div className="card-location-row">
                     <MapPin size={14} />
-                    <span>{rec.market}, {rec.district}, {rec.state}</span>
+
+                    <span>
+                      {rec.market}, {rec.district},{" "}
+                      {rec.state}
+                    </span>
                   </div>
 
                   <div className="card-prices-grid">
                     <div className="price-item">
-                      <span className="p-label">Min Rate</span>
+                      <span className="p-label">
+                        {t(
+                          "services.marketPrices.minRate",
+                          "Min Rate"
+                        )}
+                      </span>
+
                       <span className="p-val">
-                        {rec.min_price != null ? `₹${rec.min_price.toLocaleString()}` : "—"}
+                        {rec.min_price != null
+                          ? `₹${rec.min_price.toLocaleString()}`
+                          : "—"}
                       </span>
                     </div>
+
                     <div className="price-item">
-                      <span className="p-label">Max Rate</span>
+                      <span className="p-label">
+                        {t(
+                          "services.marketPrices.maxRate",
+                          "Max Rate"
+                        )}
+                      </span>
+
                       <span className="p-val">
-                        {rec.max_price != null ? `₹${rec.max_price.toLocaleString()}` : "—"}
+                        {rec.max_price != null
+                          ? `₹${rec.max_price.toLocaleString()}`
+                          : "—"}
                       </span>
                     </div>
+
                     <div className="price-item">
-                      <span className="p-label">Arrival Date</span>
-                      <span className="p-val date">{rec.arrival_date || "—"}</span>
+                      <span className="p-label">
+                        {t(
+                          "services.marketPrices.arrivalDate",
+                          "Arrival Date"
+                        )}
+                      </span>
+
+                      <span className="p-val date">
+                        {rec.arrival_date || "—"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -473,27 +783,49 @@ function MarketPrices() {
             {/* Pagination Controls */}
             <div className="market-pagination">
               <div className="pagination-info">
-                Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+                {t("services.marketPrices.page", "Page")}{" "}
+                <strong>{currentPage}</strong>{" "}
+                {t("services.marketPrices.of", "of")}{" "}
+                <strong>{totalPages}</strong>
               </div>
 
               <div className="pagination-buttons">
                 <button
                   type="button"
                   className="page-btn"
-                  onClick={() => handlePageChange(offset - limit)}
+                  onClick={() =>
+                    handlePageChange(offset - limit)
+                  }
                   disabled={offset === 0 || loading}
                 >
                   <ChevronLeft size={16} />
-                  <span>Previous</span>
+
+                  <span>
+                    {t(
+                      "services.marketPrices.previous",
+                      "Previous"
+                    )}
+                  </span>
                 </button>
 
                 <button
                   type="button"
                   className="page-btn"
-                  onClick={() => handlePageChange(offset + limit)}
-                  disabled={offset + limit >= data.total || loading}
+                  onClick={() =>
+                    handlePageChange(offset + limit)
+                  }
+                  disabled={
+                    offset + limit >= data.total ||
+                    loading
+                  }
                 >
-                  <span>Next</span>
+                  <span>
+                    {t(
+                      "services.marketPrices.next",
+                      "Next"
+                    )}
+                  </span>
+
                   <ChevronRight size={16} />
                 </button>
               </div>

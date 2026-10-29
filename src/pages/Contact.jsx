@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
-  ArrowLeft,
-  ChevronRight,
   Sparkles,
   Headphones,
   MessageSquare,
@@ -34,157 +32,356 @@ function Contact() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (formError) setFormError("");
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    if (formError) {
+      setFormError("");
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      setFormError("Please provide your name, email, and message.");
+
+    if (
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.message.trim()
+    ) {
+      setFormError(
+        t(
+          "contact.form.error",
+          "Please provide your name, email, and message."
+        )
+      );
       return;
     }
-    // Purely non-destructive UI demonstration
+
+    // UI demonstration only
     setSubmitted(true);
   };
 
   const handleReset = () => {
-    setFormData({ name: "", email: "", subject: "", message: "" });
+    setFormData({
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+    });
+
     setSubmitted(false);
     setFormError("");
   };
 
   return (
     <main className="contact-page-wrapper">
+
       {/* ================= HEADER & BREADCRUMB ================= */}
+
       <header className="contact-header-container">
         <nav className="contact-breadcrumb" aria-label="Breadcrumb">
-          <Link to="/" className="breadcrumb-link">
+
+          {/* <Link to="/" className="breadcrumb-link">
             <ArrowLeft size={16} />
-            <span>{t("navbar.home", "Home")}</span>
+            <span>
+              {t("navbar.home", "Home")}
+            </span>
           </Link>
-          <ChevronRight size={14} className="breadcrumb-separator" />
-          <span className="breadcrumb-current">{t("navbar.contact", "Contact Us")}</span>
+
+          <ChevronRight
+            size={14}
+            className="breadcrumb-separator"
+          />
+
+          <span className="breadcrumb-current">
+            {t("navbar.contact", "Contact Us")}
+          </span> */}
+
         </nav>
 
         <div className="contact-title-section">
+
           <div className="contact-badge-pill">
             <Sparkles size={15} />
-            <span>Get in Touch</span>
+            <span>
+              {t("contact.badge", "Get in Touch")}
+            </span>
           </div>
-          <h1>{t("contact.title", "Contact Us")}</h1>
+
+          <h1>
+            {t("contact.title", "Contact Us")}
+          </h1>
+
           <p className="contact-lead-text">
             {t(
               "contact.lead",
               "Have questions about KrishiMitraAI, need guidance on using our decision-support modules, or want to share feedback? Get in touch with our team."
             )}
           </p>
+
         </div>
       </header>
 
       {/* ================= TWO-COLUMN MAIN LAYOUT ================= */}
+
       <div className="contact-main-grid">
-        {/* LEFT SIDE: INFORMATION CARDS */}
+
+        {/* ================= LEFT SIDE ================= */}
+
         <section className="contact-info-column">
+
           <div className="contact-column-header">
-            <span className="section-tag">Direct Channels</span>
-            <h2>Get in Touch</h2>
+
+            <span className="section-tag">
+              {t(
+                "contact.channelsTag",
+                "Direct Channels"
+              )}
+            </span>
+
+            <h2>
+              {t(
+                "contact.channelsTitle",
+                "Get in Touch"
+              )}
+            </h2>
+
             <p>
-              We welcome enquiries, constructive feedback, and academic collaboration regarding
-              the KrishiMitraAI platform.
+              {t(
+                "contact.channelsLead",
+                "We welcome enquiries, constructive feedback, and academic collaboration regarding the KrishiMitraAI platform."
+              )}
             </p>
+
           </div>
 
           <div className="contact-info-cards-stack">
-            {/* 1. Project Support */}
+
+            {/* PROJECT SUPPORT */}
+
             <div className="contact-info-card">
+
               <div className="contact-card-top">
+
                 <div className="contact-icon-box">
                   <Headphones size={22} />
                 </div>
+
                 <div className="contact-card-title-group">
-                  <h3>Project Support</h3>
-                  <span>Feature & Usage Assistance</span>
+
+                  <h3>
+                    {t(
+                      "contact.channels.support.title",
+                      "Project Support"
+                    )}
+                  </h3>
+
+                  <span>
+                    {t(
+                      "contact.channels.support.subtitle",
+                      "Feature & Usage Assistance"
+                    )}
+                  </span>
+
                 </div>
+
               </div>
+
               <p>
-                Assistance with entering soil parameters, interpreting NPK ratio balances,
-                and querying live APMC mandi wholesale price trends across states.
+                {t(
+                  "contact.channels.support.text",
+                  "Assistance with entering soil parameters, interpreting NPK ratio balances, and querying live APMC mandi wholesale price trends across states."
+                )}
               </p>
+
               <div className="contact-card-footer-pill">
-                Support Scope: Academic & Platform Usage
+                {t(
+                  "contact.channels.support.scope",
+                  "Support Scope: Academic & Platform Usage"
+                )}
               </div>
+
             </div>
 
-            {/* 2. Feedback & Suggestions */}
+            {/* FEEDBACK */}
+
             <div className="contact-info-card">
+
               <div className="contact-card-top">
+
                 <div className="contact-icon-box">
                   <MessageSquare size={22} />
                 </div>
+
                 <div className="contact-card-title-group">
-                  <h3>Feedback & Suggestions</h3>
-                  <span>Platform Improvement</span>
+
+                  <h3>
+                    {t(
+                      "contact.channels.feedback.title",
+                      "Feedback & Suggestions"
+                    )}
+                  </h3>
+
+                  <span>
+                    {t(
+                      "contact.channels.feedback.subtitle",
+                      "Platform Improvement"
+                    )}
+                  </span>
+
                 </div>
+
               </div>
+
               <p>
-                We actively seek grower suggestions to improve interface accessibility, expand
-                regional language translations, and refine agronomic guidance.
+                {t(
+                  "contact.channels.feedback.text",
+                  "We actively seek grower suggestions to improve interface accessibility, expand regional language translations, and refine agronomic guidance."
+                )}
               </p>
+
               <div className="contact-card-footer-pill">
-                Focus: Usability & Farmer Interface
+                {t(
+                  "contact.channels.feedback.scope",
+                  "Focus: Usability & Farmer Interface"
+                )}
               </div>
+
             </div>
 
-            {/* 3. General Enquiries */}
+            {/* GENERAL ENQUIRIES */}
+
             <div className="contact-info-card">
+
               <div className="contact-card-top">
+
                 <div className="contact-icon-box">
                   <HelpCircle size={22} />
                 </div>
+
                 <div className="contact-card-title-group">
-                  <h3>General Enquiries</h3>
-                  <span>Academic & Research Collaboration</span>
+
+                  <h3>
+                    {t(
+                      "contact.channels.general.title",
+                      "General Enquiries"
+                    )}
+                  </h3>
+
+                  <span>
+                    {t(
+                      "contact.channels.general.subtitle",
+                      "Academic & Research Collaboration"
+                    )}
+                  </span>
+
                 </div>
+
               </div>
+
               <p>
-                Inquiries regarding platform architecture, Scikit-Learn Random Forest benchmarks,
-                Government open data feeds, and institutional presentations.
+                {t(
+                  "contact.channels.general.text",
+                  "Inquiries regarding platform architecture, Scikit-Learn Random Forest benchmarks, Government open data feeds, and institutional presentations."
+                )}
               </p>
+
               <div className="contact-card-footer-pill">
-                Scope: Open Agricultural Research
+                {t(
+                  "contact.channels.general.scope",
+                  "Scope: Open Agricultural Research"
+                )}
               </div>
+
             </div>
+
           </div>
         </section>
 
-        {/* RIGHT SIDE: CONTACT FORM UI */}
+        {/* ================= RIGHT SIDE: FORM ================= */}
+
         <section className="contact-form-card">
+
           <div className="contact-column-header">
-            <span className="section-tag">Message Form</span>
-            <h2>Send Us a Message</h2>
+
+            <span className="section-tag">
+              {t(
+                "contact.form.tag",
+                "Message Form"
+              )}
+            </span>
+
+            <h2>
+              {t(
+                "contact.form.title",
+                "Send Us a Message"
+              )}
+            </h2>
+
             <p>
-              Fill out the details below to share your inquiry, question, or suggestions with the
-              KrishiMitraAI project.
+              {t(
+                "contact.form.description",
+                "Fill out the details below to share your inquiry, question, or suggestions with the KrishiMitraAI project."
+              )}
             </p>
+
           </div>
 
           {submitted ? (
+
+            /* ================= SUCCESS MESSAGE ================= */
+
             <div className="form-success-banner">
-              <CheckCircle2 size={24} className="form-success-icon" />
+
+              <CheckCircle2
+                size={24}
+                className="form-success-icon"
+              />
+
               <div className="form-success-text">
-                <strong>Thank you for your message!</strong>
+
+                <strong>
+                  {t(
+                    "contact.form.successTitle",
+                    "Thank you for your message!"
+                  )}
+                </strong>
+
                 <p>
-                  Your feedback and inquiry details have been noted for the KrishiMitraAI project.
-                  Thank you for supporting smart agriculture.
+                  {t(
+                    "contact.form.successText",
+                    "Your feedback and inquiry details have been noted for the KrishiMitraAI project. Thank you for supporting smart agriculture."
+                  )}
                 </p>
-                <button type="button" onClick={handleReset} className="reset-form-link">
-                  Send another message
+
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="reset-form-link"
+                >
+                  {t(
+                    "contact.form.sendAnother",
+                    "Send another message"
+                  )}
                 </button>
+
               </div>
+
             </div>
+
           ) : (
-            <form onSubmit={handleSubmit} className="contact-form" noValidate>
+
+            /* ================= CONTACT FORM ================= */
+
+            <form
+              onSubmit={handleSubmit}
+              className="contact-form"
+              noValidate
+            >
+
               {formError && (
                 <div
                   style={{
@@ -200,142 +397,297 @@ function Contact() {
                 </div>
               )}
 
+              {/* NAME */}
+
               <div className="form-group">
+
                 <label htmlFor="contact-name">
                   <User size={15} />
-                  <span>Full Name</span>
+
+                  <span>
+                    {t(
+                      "contact.form.nameLabel",
+                      "Full Name"
+                    )}
+                  </span>
                 </label>
+
                 <div className="form-input-wrapper">
-                  <User size={16} className="form-input-icon" />
+
+                  {/* <User
+                    size={16}
+                    className="form-input-icon"
+                  /> */}
+
                   <input
                     id="contact-name"
                     name="name"
                     type="text"
-                    placeholder="Enter your full name"
+                    placeholder={t(
+                      "contact.form.namePlaceholder",
+                      "Enter your full name"
+                    )}
                     value={formData.name}
                     onChange={handleChange}
                     required
                   />
+
                 </div>
+
               </div>
 
+              {/* EMAIL */}
+
               <div className="form-group">
+
                 <label htmlFor="contact-email">
+
                   <Mail size={15} />
-                  <span>Email Address</span>
+
+                  <span>
+                    {t(
+                      "contact.form.emailLabel",
+                      "Email Address"
+                    )}
+                  </span>
+
                 </label>
+
                 <div className="form-input-wrapper">
-                  <Mail size={16} className="form-input-icon" />
+
+                  {/* <Mail
+                    size={16}
+                    className="form-input-icon"
+                  /> */}
+
                   <input
                     id="contact-email"
                     name="email"
                     type="email"
-                    placeholder="name@example.com"
+                    placeholder={t(
+                      "contact.form.emailPlaceholder",
+                      "name@example.com"
+                    )}
                     value={formData.email}
                     onChange={handleChange}
                     required
                   />
+
                 </div>
+
               </div>
 
+              {/* SUBJECT */}
+
               <div className="form-group">
+
                 <label htmlFor="contact-subject">
+
                   <FileText size={15} />
-                  <span>Subject</span>
+
+                  <span>
+                    {t(
+                      "contact.form.subjectLabel",
+                      "Subject"
+                    )}
+                  </span>
+
                 </label>
+
                 <div className="form-input-wrapper">
-                  <FileText size={16} className="form-input-icon" />
+
+                  {/* <FileText
+                    size={16}
+                    className="form-input-icon"
+                  /> */}
+
                   <input
                     id="contact-subject"
                     name="subject"
                     type="text"
-                    placeholder="What is your enquiry about?"
+                    placeholder={t(
+                      "contact.form.subjectPlaceholder",
+                      "What is your enquiry about?"
+                    )}
                     value={formData.subject}
                     onChange={handleChange}
                   />
+
                 </div>
+
               </div>
 
+              {/* MESSAGE */}
+
               <div className="form-group">
+
                 <label htmlFor="contact-message">
+
                   <MessageSquare size={15} />
-                  <span>Message</span>
+
+                  <span>
+                    {t(
+                      "contact.form.messageLabel",
+                      "Message"
+                    )}
+                  </span>
+
                 </label>
+
                 <div className="form-input-wrapper">
+
+                 {/*  <MessageSquare
+                    size={16}
+                    className="form-input-icon"
+                  /> */}
+
                   <textarea
                     id="contact-message"
                     name="message"
-                    placeholder="Type your message, feedback, or inquiry here..."
+                    placeholder={t(
+                      "contact.form.messagePlaceholder",
+                      "Type your message, feedback, or inquiry here..."
+                    )}
                     rows={4}
                     value={formData.message}
                     onChange={handleChange}
                     required
                   />
+
                 </div>
+
               </div>
 
-              <button type="submit" className="form-submit-btn">
+              {/* SUBMIT */}
+
+              <button
+                type="submit"
+                className="form-submit-btn"
+              >
                 <Send size={16} />
-                <span>Send Message</span>
+
+                <span>
+                  {t(
+                    "contact.form.submit",
+                    "Send Message"
+                  )}
+                </span>
               </button>
+
             </form>
           )}
+
         </section>
       </div>
 
-      {/* ================= COMPACT PROJECT INFO SECTION ================= */}
+      {/* ================= PROJECT OVERVIEW ================= */}
+
       <section className="contact-project-overview-card">
+
         <div className="project-overview-header">
+
           <div className="project-overview-icon">
             <Sprout size={22} />
           </div>
-          <h3>KrishiMitraAI Platform Project</h3>
+
+          <h3>
+            {t(
+              "contact.project.title",
+              "KrishiMitraAI Platform Project"
+            )}
+          </h3>
+
         </div>
+
         <p>
-          KrishiMitraAI brings together critical agricultural decision-support capabilities onto a
-          single unified, accessible web platform. Developed to assist Indian farmers at every stage
-          of cultivation, the system integrates empirical machine learning for crop recommendation,
-          laboratory-grounded soil nutrient analysis, real-time Government of India APMC mandi wholesale
-          rates, and developing agro-climatic capabilities.
+          {t(
+            "contact.project.description",
+            "KrishiMitraAI brings together critical agricultural decision-support capabilities onto a single unified, accessible web platform. Developed to assist Indian farmers at every stage of cultivation, the system integrates empirical machine learning for crop recommendation, laboratory-grounded soil nutrient analysis, real-time Government of India APMC mandi wholesale rates, and developing agro-climatic capabilities."
+          )}
         </p>
+
         <div className="project-pills-row">
+
           <span className="project-pill-item">
             <Check size={13} />
-            Crop Recommendation Engine
+            {t(
+              "contact.project.pills.crop",
+              "Crop Recommendation Engine"
+            )}
           </span>
+
           <span className="project-pill-item">
             <Check size={13} />
-            Soil Health Diagnostics
+            {t(
+              "contact.project.pills.soil",
+              "Soil Health Diagnostics"
+            )}
           </span>
+
           <span className="project-pill-item">
             <Check size={13} />
-            Live Agmarknet Mandi Feeds
+            {t(
+              "contact.project.pills.market",
+              "Live Agmarknet Mandi Feeds"
+            )}
           </span>
+
           <span className="project-pill-item">
             <Check size={13} />
-            12 Indian Regional Languages
+            {t(
+              "contact.project.pills.languages",
+              "12 Indian Regional Languages"
+            )}
           </span>
+
           <span className="project-pill-item">
             <Check size={13} />
-            Farmer-First Responsive UI
+            {t(
+              "contact.project.pills.ui",
+              "Farmer-First Responsive UI"
+            )}
           </span>
+
         </div>
+
       </section>
 
-      {/* ================= BOTTOM SECTION: BACK TO HOME ONLY ================= */}
+      {/* ================= BOTTOM SECTION ================= */}
+
       <section className="contact-closing-banner">
+
         <div className="closing-banner-text">
-          <h2>Return to KrishiMitraAI Home</h2>
+
+          <h2>
+            {t(
+              "contact.closing.title",
+              "Return to KrishiMitraAI Home"
+            )}
+          </h2>
+
           <p>
-            Explore our agricultural decision-support modules, farmer knowledge resources, and
-            platform services.
+            {t(
+              "contact.closing.text",
+              "Explore our agricultural decision-support modules, farmer knowledge resources, and platform services."
+            )}
           </p>
+
         </div>
 
-        <Link to="/" className="contact-home-btn">
-          <span>Back to Home</span>
+        <Link
+          to="/"
+          className="contact-home-btn"
+        >
+          <span>
+            {t(
+              "contact.closing.button",
+              "Back to Home"
+            )}
+          </span>
         </Link>
+
       </section>
+
     </main>
   );
 }

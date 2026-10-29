@@ -1,11 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
 import {
-  Sprout,
-  Leaf,
-  ArrowRight,
-  MessageCircle,
-  ShieldCheck,
+  Sprout, Leaf, ArrowRight, MessageCircle, ShieldCheck,
 } from "lucide-react";
 
 import cropIcon from "../assets/cropRecommendation_image.png";
@@ -23,7 +19,9 @@ import footerImage from "../assets/footer_image.png"
 
 import heroImage from "../assets/Farmer_Image.png";
 
-function Home() {
+
+
+function Home({ onOpenChat }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -50,6 +48,7 @@ function Home() {
       description: t("services.soilAnalysis.description"),
       button: t("services.soilAnalysis.button"),
       className: "green-card",
+      path: "/soil-analysis",
     },
     {
       icon: <img src={weatherIcon} alt="Weather" className="service-icon" />,
@@ -57,7 +56,7 @@ function Home() {
       description: t("services.weather.description"),
       button: t("services.weather.button"),
       className: "yellow-card",
-      path: "/weather-forecast",
+      path: "/weather",
     },
     {
       icon: <img src={yieldIcon} alt="YieldPrediction" className="service-icon" />,
@@ -82,16 +81,19 @@ function Home() {
       icon: <img src={insightsoilIcon} alt="insightsoil" className="insight-icon" />,
       title: t("insights.soil.title"),
       description: t("insights.soil.description"),
+      path: "/insights/soil",
     },
     {
       icon: <img src={insightdiseaseIcon} alt="insightdisease" className="insight-icon" />,
       title: t("insights.disease.title"),
       description: t("insights.disease.description"),
+      path: "/insights/disease",
     },
     {
       icon: <img src={insightwaterIcon} alt="insightwater" className="insight-icon" />,
       title: t("insights.water.title"),
       description: t("insights.water.description"),
+      path: "/insights/water",
     },
   ];
 
@@ -128,16 +130,13 @@ function Home() {
 
             <button
               className="primary-button"
-              onClick={() => {
-                const elem = document.querySelector(".services-section");
-                if (elem) elem.scrollIntoView({ behavior: "smooth" });
-              }}
+              onClick={() => navigate("/services")}
             >
               {t("hero.exploreServices")}
               <ArrowRight size={18} />
             </button>
 
-            <button className="secondary-button">
+            <button className="secondary-button" onClick={onOpenChat}>
               <MessageCircle size={18} />
               {t("hero.askAssistant")}
             </button>
@@ -162,11 +161,11 @@ function Home() {
 
       {/* ================= SERVICES ================= */}
 
-      <section className="services-section">
+      <section className="services-section-home">
 
-        <div className="section-heading">
+        <div className="section-heading-home">
 
-          <span className="section-label">
+          <span className="section-label-home">
             KRISHIMITRA AI
           </span>
 
@@ -187,8 +186,6 @@ function Home() {
             <div
               className={`service-card ${service.className}`}
               key={index}
-              onClick={() => service.path && navigate(service.path)}
-              style={{ cursor: service.path ? "pointer" : "default" }}
             >
 
               <div className="service-icon">
@@ -205,17 +202,13 @@ function Home() {
                   {service.description}
                 </p>
 
-                {service.path ? (
-                  <Link to={service.path} className="card-button">
-                    {service.button}
-                    <ArrowRight size={15} />
-                  </Link>
-                ) : (
-                  <button className="card-button">
-                    {service.button}
-                    <ArrowRight size={15} />
-                  </button>
-                )}
+                {/* <button className="card-button">
+                  {service.button}
+                  <ArrowRight size={15} />
+                </button> */}
+                <button className="card-button" onClick={() => service.path && navigate(service.path)}>
+                  {service.button}
+                </button>
 
               </div>
 
@@ -229,11 +222,11 @@ function Home() {
 
       {/* ================= INSIGHTS ================= */}
 
-      <section className="insights-section">
+      <section className="insights-section-home">
 
-        <div className="section-heading">
+        <div className="section-heading-home">
 
-          <span className="section-label">
+          <span className="section-label-home">
             FARMER KNOWLEDGE
           </span>
 
@@ -266,7 +259,7 @@ function Home() {
                   {item.description}
                 </p>
 
-                <button>
+                <button onClick={() => item.path && navigate(item.path)}>
                   {t("insights.soil.button")}
                   <ArrowRight size={15} />
                 </button>
@@ -286,11 +279,11 @@ function Home() {
 
         <div className="assistant-card">
 
-             <img
-                src={footerImage}
-                alt="KrishiMitra AI Assistant"
-                className="assistant-bg"
-            />
+          <img
+            src={footerImage}
+            alt="KrishiMitra AI Assistant"
+            className="assistant-bg"
+          />
 
           <div className="assistant-icon">
             <MessageCircle size={38} />
@@ -304,7 +297,7 @@ function Home() {
             {t("assistant.description")}
           </p>
 
-          <button className="assistant-button">
+          <button className="assistant-button" onClick={onOpenChat}>
             <MessageCircle size={20} />
             {t("services.aiAssistant.button")}
           </button>
@@ -335,12 +328,12 @@ function Home() {
       <section className="stats-section">
 
         <div className="stat-box">
-          <strong>7+</strong>
+          <strong>5+</strong>
           <span>{t("stats.services")}</span>
         </div>
 
         <div className="stat-box">
-          <strong>3+</strong>
+          <strong>9+</strong>
           <span>{t("stats.languages")}</span>
         </div>
 

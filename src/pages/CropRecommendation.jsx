@@ -1,61 +1,20 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Sprout,
-  Thermometer,
+  FlaskConical,
   ArrowRight,
   RotateCcw,
-  AlertCircle,
-  CheckCircle2,
-  Info,
   Layers,
+  Thermometer,
   Sparkles,
-  ArrowLeft,
-  ChevronRight,
+  Gauge,
 } from "lucide-react";
-import { predictCropRecommendation } from "../services/cropApi";
 
-const PRESETS = [
-  {
-    name: "Rice Profile",
-    data: {
-      nitrogen: 90,
-      phosphorus: 42,
-      potassium: 43,
-      temperature: 20.87,
-      humidity: 82.0,
-      ph: 6.5,
-      rainfall: 202.93,
-    },
-  },
-  {
-    name: "Maize Profile",
-    data: {
-      nitrogen: 80,
-      phosphorus: 48,
-      potassium: 20,
-      temperature: 24.5,
-      humidity: 65.0,
-      ph: 6.2,
-      rainfall: 95.0,
-    },
-  },
-  {
-    name: "Cotton Profile",
-    data: {
-      nitrogen: 120,
-      phosphorus: 45,
-      potassium: 22,
-      temperature: 26.0,
-      humidity: 78.0,
-      ph: 7.2,
-      rainfall: 80.0,
-    },
-  },
-];
+import { predictCrop } from "../services/cropService";
+import "./css/CropRecommendation.css";
 
-const INITIAL_FORM = {
+const initialForm = {
   nitrogen: "",
   phosphorus: "",
   potassium: "",
@@ -65,470 +24,585 @@ const INITIAL_FORM = {
   rainfall: "",
 };
 
-function CropRecommendation() {
-  const { t } = useTranslation();
-  const [formData, setFormData] = useState(INITIAL_FORM);
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [apiError, setApiError] = useState(null);
+const PRESETS = [
+  {
+    key: "rice",
+    data: {
+      nitrogen: 90,
+      phosphorus: 42,
+      potassium: 43,
+      temperature: 25.5,
+      humidity: 82,
+      ph: 6.5,
+      rainfall: 200,
+    },
+  },
+  {
+    key: "maize",
+    data: {
+      nitrogen: 80,
+      phosphorus: 48,
+      potassium: 20,
+      temperature: 24.5,
+      humidity: 64.9,
+      ph: 6.2,
+      rainfall: 95,
+    },
+  },
+  {
+    key: "cotton",
+    data: {
+      nitrogen: 120,
+      phosphorus: 45,
+      potassium: 20,
+      temperature: 24,
+      humidity: 80,
+      ph: 6.9,
+      rainfall: 80,
+    },
+  },
+];
+
+const CropRecommendation = () => {
+  const { t, i18n } = useTranslation();
+
+  const [formValues, setFormValues] = useState(initialForm);
   const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const validateField = (name, value) => {
-    if (value === "" || value === null || value === undefined) {
-      return "This field is required";
-    }
-    const num = Number(value);
-    if (isNaN(num)) {
-      return "Must be a valid numeric value";
-    }
+  const handleChange = (event) => {
+    const { name, value } = event.target;
 
-    switch (name) {
-      case "nitrogen":
-      case "phosphorus":
-      case "potassium":
-        if (num < 0 || num > 300) return "Valid range is 0 to 300";
-        break;
-      case "temperature":
-        if (num < -10 || num > 60) return "Valid range is -10°C to 60°C";
-        break;
-      case "humidity":
-        if (num < 0 || num > 100) return "Valid range is 0% to 100%";
-        break;
-      case "ph":
-        if (num < 0 || num > 14) return "Valid range is 0 to 14 pH";
-        break;
-      case "rainfall":
-        if (num < 0 || num > 1000) return "Valid range is 0 to 1000 mm";
-        break;
-      default:
-        break;
-    }
-    return null;
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      const err = validateField(name, value);
-      setErrors((prev) => ({ ...prev, [name]: err }));
-    }
-  };
+  const applyPreset = (preset) => {
+    setFormValues(
+      Object.fromEntries(
+        Object.entries(preset.data).map(([key, val]) => [key, String(val)])
+      )
+    );
 
-  const handlePresetSelect = (preset) => {
-    setFormData({
-      nitrogen: preset.data.nitrogen !== undefined ? preset.data.nitrogen.toString() : "",
-      phosphorus: preset.data.phosphorus !== undefined ? preset.data.phosphorus.toString() : "",
-      potassium: preset.data.potassium !== undefined ? preset.data.potassium.toString() : "",
-      temperature: preset.data.temperature !== undefined ? preset.data.temperature.toString() : "",
-      humidity: preset.data.humidity !== undefined ? preset.data.humidity.toString() : "",
-      ph: preset.data.ph !== undefined ? preset.data.ph.toString() : "",
-      rainfall: preset.data.rainfall !== undefined ? preset.data.rainfall.toString() : "",
-    });
-    setErrors({});
-    setApiError(null);
-  };
-
-  const handleReset = () => {
-    setFormData(INITIAL_FORM);
-    setErrors({});
-    setApiError(null);
     setResult(null);
+    setError(null);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setApiError(null);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-    // Validate all fields
-    const newErrors = {};
-    Object.keys(formData).forEach((key) => {
-      const err = validateField(key, formData[key]);
-      if (err) newErrors[key] = err;
-    });
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
+    setError(null);
+    setResult(null);
     setLoading(true);
+
     try {
-      const response = await predictCropRecommendation(formData);
-      setResult(response);
-      // Scroll to result smoothly on mobile
-      setTimeout(() => {
-        const resElem = document.getElementById("recommendation-result");
-        if (resElem) {
-          resElem.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }, 100);
+      const data = await predictCrop({
+        ...formValues,
+        language: i18n.language,
+      });
+
+      setResult(data);
     } catch (err) {
-      setApiError(err.message || "Failed to process crop recommendation");
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div className="crop-page-wrapper">
-      {/* Header Banner */}
-      <div className="crop-header-container">
-        <div className="crop-breadcrumb">
-          <Link to="/" className="breadcrumb-link">
-            <ArrowLeft size={16} />
-            {t("navbar.home", "Home")}
-          </Link>
-          <ChevronRight size={14} className="breadcrumb-separator" />
-          <span className="breadcrumb-current">
-            {t("services.cropRecommendation.title", "Crop Recommendation")}
-          </span>
-        </div>
+  const handleReset = () => {
+    setFormValues(initialForm);
+    setResult(null);
+    setError(null);
+  };
 
-        <div className="crop-title-section">
-          <div className="badge-pill">
-            <Sparkles size={16} />
-            <span>AI Agricultural Intelligence</span>
-          </div>
-          <h1>{t("services.cropRecommendation.title", "Crop Recommendation Engine")}</h1>
+  /*
+   * Backend returns translated confidence tier text.
+   * We keep CSS classes based on the canonical English tier
+   * so existing CSS continues to work.
+   */
+  const getConfidenceTierClass = (tier) => {
+    const normalized = String(tier || "").toLowerCase();
+
+    if (
+      normalized === "high" ||
+      normalized === "उच्च" ||
+      normalized === "ઉચ્ચ" ||
+      normalized === "उच्च"
+    ) {
+      return "high";
+    }
+
+    if (
+      normalized === "moderate" ||
+      normalized === "मध्यम" ||
+      normalized === "મધ્યમ" ||
+      normalized === "মাঝারি" ||
+      normalized === "ਮੱਧਮ" ||
+      normalized === "ମଧ୍ୟମ" ||
+      normalized === "மிதமான" ||
+      normalized === "మధ్యస్థ" ||
+      normalized === "ಮಧ್ಯಮ" ||
+      normalized === "മിതമായ"
+    ) {
+      return "moderate";
+    }
+
+    if (
+      normalized === "low" ||
+      normalized === "कम" ||
+      normalized === "ઓછું" ||
+      normalized === "কম" ||
+      normalized === "ਘੱਟ" ||
+      normalized === "କମ୍" ||
+      normalized === "குறைவு" ||
+      normalized === "తక్కువ" ||
+      normalized === "ಕಡಿಮೆ" ||
+      normalized === "കുറവ്"
+    ) {
+      return "low";
+    }
+
+    return "moderate";
+  };
+
+  return (
+    <div className="crop-page">
+      <div className="crop-container">
+
+        {/* Header */}
+        <div className="crop-header">
+          <span className="crop-badge">
+            <Sprout size={16} />
+            {t(
+              "services.cropRecommendation.title",
+              "Crop Recommendation"
+            )}
+          </span>
+
+          <h1>
+            {t(
+              "services.cropRecommendation.title",
+              "Crop Recommendation"
+            )}
+          </h1>
+
           <p>
-            Enter your field&apos;s soil nutrient parameters and environmental measurements to receive
-            data-driven crop suggestions powered by machine learning.
+            {t(
+              "services.cropRecommendation.description",
+              "Enter your soil and climate values to get an AI-powered crop suggestion."
+            )}
           </p>
         </div>
-      </div>
 
-      <div className="crop-content-layout">
-        {/* Left Column: Form & Presets */}
-        <div className="crop-form-card">
-          <div className="card-header-row">
-            <div>
-              <h2>Soil & Climate Parameters</h2>
-              <p className="card-subtext">Provide 7 environmental and soil readings</p>
-            </div>
-            <button
-              type="button"
-              className="reset-btn-secondary"
-              onClick={handleReset}
-              title="Reset all fields"
-            >
-              <RotateCcw size={15} />
-              <span>Reset</span>
-            </button>
-          </div>
+        <div className="crop-layout">
 
-          {/* Quick Preset Buttons */}
-          <div className="presets-container">
-            <span className="presets-label">
-              <Info size={14} /> Quick Samples:
-            </span>
-            <div className="preset-buttons">
-              {PRESETS.map((p, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  className="preset-tag"
-                  onClick={() => handlePresetSelect(p)}
-                >
-                  {p.name}
-                </button>
-              ))}
-            </div>
-          </div>
+          {/* LEFT: Form */}
+          <div className="crop-form-panel">
 
-          {apiError && (
-            <div className="alert-box alert-error">
-              <AlertCircle size={20} className="alert-icon" />
-              <div className="alert-content">
-                <strong>Recommendation Request Failed</strong>
-                <p>{apiError}</p>
-              </div>
-            </div>
-          )}
+            <div className="crop-panel-heading">
+              <h2>
+                {t(
+                  "services.cropRecommendation.soilClimateParameters",
+                  "Soil & Climate Parameters"
+                )}
+              </h2>
 
-          <form onSubmit={handleSubmit} noValidate>
-            {/* Section A: Soil Macronutrients */}
-            <div className="form-group-section">
-              <div className="section-title-row">
-                <Sprout size={18} className="section-icon" />
-                <h3>Soil Macronutrients & pH</h3>
-              </div>
-
-              <div className="form-grid-2">
-                <div className="input-field-group">
-                  <label htmlFor="nitrogen">
-                    Nitrogen (N) <span className="unit-tag">kg/ha (0-300)</span>
-                  </label>
-                  <div className="input-with-icon">
-                    <input
-                      id="nitrogen"
-                      name="nitrogen"
-                      type="number"
-                      step="any"
-                      placeholder="e.g. 90"
-                      value={formData.nitrogen}
-                      onChange={handleChange}
-                      className={errors.nitrogen ? "input-error" : ""}
-                    />
-                  </div>
-                  {errors.nitrogen && <span className="field-error-text">{errors.nitrogen}</span>}
-                </div>
-
-                <div className="input-field-group">
-                  <label htmlFor="phosphorus">
-                    Phosphorus (P) <span className="unit-tag">kg/ha (0-300)</span>
-                  </label>
-                  <div className="input-with-icon">
-                    <input
-                      id="phosphorus"
-                      name="phosphorus"
-                      type="number"
-                      step="any"
-                      placeholder="e.g. 42"
-                      value={formData.phosphorus}
-                      onChange={handleChange}
-                      className={errors.phosphorus ? "input-error" : ""}
-                    />
-                  </div>
-                  {errors.phosphorus && (
-                    <span className="field-error-text">{errors.phosphorus}</span>
-                  )}
-                </div>
-
-                <div className="input-field-group">
-                  <label htmlFor="potassium">
-                    Potassium (K) <span className="unit-tag">kg/ha (0-300)</span>
-                  </label>
-                  <div className="input-with-icon">
-                    <input
-                      id="potassium"
-                      name="potassium"
-                      type="number"
-                      step="any"
-                      placeholder="e.g. 43"
-                      value={formData.potassium}
-                      onChange={handleChange}
-                      className={errors.potassium ? "input-error" : ""}
-                    />
-                  </div>
-                  {errors.potassium && <span className="field-error-text">{errors.potassium}</span>}
-                </div>
-
-                <div className="input-field-group">
-                  <label htmlFor="ph">
-                    Soil pH <span className="unit-tag">Scale 0 - 14</span>
-                  </label>
-                  <div className="input-with-icon">
-                    <input
-                      id="ph"
-                      name="ph"
-                      type="number"
-                      step="0.01"
-                      placeholder="e.g. 6.5"
-                      value={formData.ph}
-                      onChange={handleChange}
-                      className={errors.ph ? "input-error" : ""}
-                    />
-                  </div>
-                  {errors.ph && <span className="field-error-text">{errors.ph}</span>}
-                </div>
-              </div>
-            </div>
-
-            {/* Section B: Environmental Conditions */}
-            <div className="form-group-section">
-              <div className="section-title-row">
-                <Thermometer size={18} className="section-icon" />
-                <h3>Climate & Environmental Conditions</h3>
-              </div>
-
-              <div className="form-grid-3">
-                <div className="input-field-group">
-                  <label htmlFor="temperature">
-                    Temperature <span className="unit-tag">°C (-10 to 60)</span>
-                  </label>
-                  <div className="input-with-icon">
-                    <input
-                      id="temperature"
-                      name="temperature"
-                      type="number"
-                      step="0.1"
-                      placeholder="e.g. 20.8"
-                      value={formData.temperature}
-                      onChange={handleChange}
-                      className={errors.temperature ? "input-error" : ""}
-                    />
-                  </div>
-                  {errors.temperature && (
-                    <span className="field-error-text">{errors.temperature}</span>
-                  )}
-                </div>
-
-                <div className="input-field-group">
-                  <label htmlFor="humidity">
-                    Humidity <span className="unit-tag">% (0 to 100)</span>
-                  </label>
-                  <div className="input-with-icon">
-                    <input
-                      id="humidity"
-                      name="humidity"
-                      type="number"
-                      step="0.1"
-                      placeholder="e.g. 82.0"
-                      value={formData.humidity}
-                      onChange={handleChange}
-                      className={errors.humidity ? "input-error" : ""}
-                    />
-                  </div>
-                  {errors.humidity && <span className="field-error-text">{errors.humidity}</span>}
-                </div>
-
-                <div className="input-field-group">
-                  <label htmlFor="rainfall">
-                    Rainfall <span className="unit-tag">mm (0 to 1000)</span>
-                  </label>
-                  <div className="input-with-icon">
-                    <input
-                      id="rainfall"
-                      name="rainfall"
-                      type="number"
-                      step="0.1"
-                      placeholder="e.g. 202.9"
-                      value={formData.rainfall}
-                      onChange={handleChange}
-                      className={errors.rainfall ? "input-error" : ""}
-                    />
-                  </div>
-                  {errors.rainfall && <span className="field-error-text">{errors.rainfall}</span>}
-                </div>
-              </div>
-            </div>
-
-            {/* Submit CTA */}
-            <div className="form-actions">
               <button
-                type="submit"
-                id="crop-recommendation-submit-btn"
-                disabled={loading}
-                className={`submit-recommendation-btn ${loading ? "btn-loading" : ""}`}
+                type="button"
+                className="reset-link"
+                onClick={handleReset}
               >
-                {loading ? (
-                  <>
-                    <span className="spinner-indicator"></span>
-                    Evaluating Soil & Climate Model...
-                  </>
-                ) : (
-                  <>
-                    <Sprout size={18} />
-                    Get AI Recommendation
-                    <ArrowRight size={16} />
-                  </>
+                <RotateCcw size={14} />
+
+                {t(
+                  "services.cropRecommendation.reset",
+                  "Reset"
                 )}
               </button>
             </div>
-          </form>
-        </div>
 
-        {/* Right Column: Results or Guide Placeholder */}
-        <div className="crop-result-column" id="recommendation-result">
-          {result && result.prediction ? (
-            <div className="results-container animate-fade-in">
-              {/* Primary Crop Card */}
-              <div className="primary-crop-card">
-                <div className="primary-crop-badge">
-                  <CheckCircle2 size={16} />
-                  <span>Primary Recommendation</span>
+            {/* Quick Samples */}
+            <div className="preset-row">
+              <span className="preset-label">
+                <Sparkles size={14} />
+
+                {t(
+                  "services.cropRecommendation.quickSamples",
+                  "Quick Samples"
+                )}
+                :
+              </span>
+
+              {PRESETS.map((preset) => (
+                <button
+                  key={preset.key}
+                  type="button"
+                  className="preset-chip"
+                  onClick={() => applyPreset(preset)}
+                >
+                  {t(
+                    `services.cropRecommendation.presets.${preset.key}`,
+                    `${preset.key} Profile`
+                  )}
+                </button>
+              ))}
+            </div>
+
+            <form onSubmit={handleSubmit} className="crop-form">
+
+              {/* Soil Section */}
+              <div className="crop-section-heading">
+                <Layers size={16} />
+
+                {t(
+                  "services.cropRecommendation.soilMacronutrients",
+                  "Soil Macronutrients & pH"
+                )}
+              </div>
+
+              <div className="crop-form-grid">
+
+                {/* Nitrogen */}
+                <div className="crop-field">
+                  <label>
+                    {t(
+                      "services.cropRecommendation.nitrogen",
+                      "Nitrogen"
+                    )}{" "}
+                    (N) <span>kg/ha</span>
+                  </label>
+
+                  <input
+                    type="number"
+                    name="nitrogen"
+                    value={formValues.nitrogen}
+                    onChange={handleChange}
+                    required
+                    min="0"
+                    max="300"
+                    step="any"
+                  />
                 </div>
 
-                <div className="crop-hero-content">
-                  <div className="crop-avatar">
-                    <Sprout size={36} />
-                  </div>
-                  <div className="crop-title-group">
-                    <h2 className="recommended-crop-name">
-                      {result.prediction.recommended_crop.toUpperCase()}
-                    </h2>
-                    <span className="crop-sublabel">Optimal match for your input profile</span>
-                  </div>
+                {/* Phosphorus */}
+                <div className="crop-field">
+                  <label>
+                    {t(
+                      "services.cropRecommendation.phosphorus",
+                      "Phosphorus"
+                    )}{" "}
+                    (P) <span>kg/ha</span>
+                  </label>
+
+                  <input
+                    type="number"
+                    name="phosphorus"
+                    value={formValues.phosphorus}
+                    onChange={handleChange}
+                    required
+                    min="0"
+                    max="300"
+                    step="any"
+                  />
                 </div>
 
-                <div className="confidence-meter-box">
-                  <div className="confidence-header">
-                    <span className="confidence-label">Model Statistical Probability</span>
-                    <span className="confidence-percentage">
-                      {result.prediction.confidence_pct.toFixed(1)}%
-                    </span>
-                  </div>
-                  <div className="confidence-progress-bar">
-                    <div
-                      className="confidence-fill"
-                      style={{ width: `${Math.min(result.prediction.confidence_pct, 100)}%` }}
-                    ></div>
-                  </div>
-                  <div className="tier-row">
-                    <span
-                      className={`tier-badge tier-${result.prediction.confidence_tier.toLowerCase()}`}
-                    >
-                      {result.prediction.confidence_tier} Confidence Tier
-                    </span>
-                    <span className="probability-note">
-                      *Output represents statistical model scoring over reference datasets.
-                    </span>
-                  </div>
+                {/* Potassium */}
+                <div className="crop-field">
+                  <label>
+                    {t(
+                      "services.cropRecommendation.potassium",
+                      "Potassium"
+                    )}{" "}
+                    (K) <span>kg/ha</span>
+                  </label>
+
+                  <input
+                    type="number"
+                    name="potassium"
+                    value={formValues.potassium}
+                    onChange={handleChange}
+                    required
+                    min="0"
+                    max="300"
+                    step="any"
+                  />
+                </div>
+
+                {/* Soil pH */}
+                <div className="crop-field">
+                  <label>
+                    {t(
+                      "services.cropRecommendation.soilPh",
+                      "Soil pH"
+                    )}{" "}
+                    <span>0-14</span>
+                  </label>
+
+                  <input
+                    type="number"
+                    name="ph"
+                    value={formValues.ph}
+                    onChange={handleChange}
+                    required
+                    min="0"
+                    max="14"
+                    step="any"
+                  />
                 </div>
               </div>
 
-              {/* Alternative Crops */}
-              {result.prediction.top_alternatives &&
-                result.prediction.top_alternatives.length > 0 && (
-                  <div className="alternatives-card">
-                    <div className="card-mini-title">
-                      <Layers size={16} />
-                      <h3>Alternative Crop Candidates</h3>
-                    </div>
+              {/* Climate Section */}
+              <div className="crop-section-heading">
+                <Thermometer size={16} />
+
+                {t(
+                  "services.cropRecommendation.climateConditions",
+                  "Climate & Environmental Conditions"
+                )}
+              </div>
+
+              <div className="crop-form-grid">
+
+                {/* Temperature */}
+                <div className="crop-field">
+                  <label>
+                    {t(
+                      "services.cropRecommendation.temperature",
+                      "Temperature"
+                    )}{" "}
+                    <span>°C</span>
+                  </label>
+
+                  <input
+                    type="number"
+                    name="temperature"
+                    value={formValues.temperature}
+                    onChange={handleChange}
+                    required
+                    min="-10"
+                    max="60"
+                    step="any"
+                  />
+                </div>
+
+                {/* Humidity */}
+                <div className="crop-field">
+                  <label>
+                    {t(
+                      "services.cropRecommendation.humidity",
+                      "Humidity"
+                    )}{" "}
+                    <span>%</span>
+                  </label>
+
+                  <input
+                    type="number"
+                    name="humidity"
+                    value={formValues.humidity}
+                    onChange={handleChange}
+                    required
+                    min="0"
+                    max="100"
+                    step="any"
+                  />
+                </div>
+
+                {/* Rainfall */}
+                <div className="crop-field">
+                  <label>
+                    {t(
+                      "services.cropRecommendation.rainfall",
+                      "Rainfall"
+                    )}{" "}
+                    <span>mm</span>
+                  </label>
+
+                  <input
+                    type="number"
+                    name="rainfall"
+                    value={formValues.rainfall}
+                    onChange={handleChange}
+                    required
+                    min="0"
+                    max="1000"
+                    step="any"
+                  />
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="predict-btn"
+                disabled={loading}
+              >
+                <Sprout size={18} />
+
+                {loading
+                  ? t(
+                      "services.cropRecommendation.predicting",
+                      "Predicting..."
+                    )
+                  : t(
+                      "services.cropRecommendation.getRecommendation",
+                      "Get AI Recommendation"
+                    )}
+
+                <ArrowRight size={18} />
+              </button>
+            </form>
+
+            {error && (
+              <div className="crop-status error">
+                {error}
+              </div>
+            )}
+          </div>
+
+          {/* RIGHT: Result */}
+          <div className="crop-result-panel">
+
+            {/* Empty State */}
+            {!result && !loading && (
+              <div className="crop-result-empty">
+                <FlaskConical size={36} />
+
+                <p>
+                  {t(
+                    "services.cropRecommendation.emptyResult",
+                    'Fill in the parameters and click "Get AI Recommendation" to see your result here.'
+                  )}
+                </p>
+              </div>
+            )}
+
+            {/* Loading State */}
+            {loading && (
+              <div className="crop-result-empty">
+                <Gauge
+                  size={36}
+                  className="spin-icon"
+                />
+
+                <p>
+                  {t(
+                    "services.cropRecommendation.runningModel",
+                    "Running the model..."
+                  )}
+                </p>
+              </div>
+            )}
+
+            {/* Result */}
+            {result && !loading && (
+              <div className="crop-result-card">
+
+                <span className="result-tag">
+                  <Sparkles size={14} />
+
+                  {t(
+                    "services.cropRecommendation.primaryRecommendation",
+                    "Primary Recommendation"
+                  )}
+                </span>
+
+                <div className="crop-result-main">
+
+                  <div className="crop-result-icon">
+                    <Sprout size={26} />
+                  </div>
+
+                  <div>
+                    <h2 className="crop-result-name">
+                      {result.prediction.recommended_crop}
+                    </h2>
+
+                    <p className="crop-result-sub">
+                      {t(
+                        "services.cropRecommendation.optimalMatch",
+                        "Optimal match for your input profile"
+                      )}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Confidence */}
+                <div className="confidence-block">
+
+                  <div className="confidence-row">
+                    <span>
+                      {t(
+                        "services.cropRecommendation.modelProbability",
+                        "Model Statistical Probability"
+                      )}
+                    </span>
+
+                    <strong>
+                      {result.prediction.confidence_pct}%
+                    </strong>
+                  </div>
+
+                  <div className="confidence-track">
+                    <div
+                      className={`confidence-fill tier-${getConfidenceTierClass(
+                        result.prediction.confidence_tier
+                      )}`}
+                      style={{
+                        width: `${result.prediction.confidence_pct}%`,
+                      }}
+                    />
+                  </div>
+
+                  <span
+                    className={`confidence-tier-badge tier-${getConfidenceTierClass(
+                      result.prediction.confidence_tier
+                    )}`}
+                  >
+                    {result.prediction.confidence_tier}{" "}
+                    {t(
+                      "services.cropRecommendation.confidenceTier",
+                      "Confidence Tier"
+                    )}
+                  </span>
+                </div>
+
+                {/* Alternatives */}
+                {result.prediction.top_alternatives?.length > 0 && (
+                  <div className="crop-alternatives">
+
+                    <h3>
+                      {t(
+                        "services.cropRecommendation.otherPossibleCrops",
+                        "Other possible crops"
+                      )}
+                    </h3>
+
                     <div className="alternatives-grid">
-                      {result.prediction.top_alternatives.map((alt, idx) => (
-                        <div key={idx} className="alt-crop-item">
-                          <span className="alt-crop-name">
-                            {alt.crop.charAt(0).toUpperCase() + alt.crop.slice(1)}
-                          </span>
-                          <span className="alt-crop-score">{alt.confidence_pct.toFixed(1)}%</span>
+                      {result.prediction.top_alternatives.map((alt) => (
+                        <div
+                          key={alt.crop}
+                          className="alternative-chip"
+                        >
+                          <span>{alt.crop}</span>
+
+                          <strong>
+                            {alt.confidence_pct}%
+                          </strong>
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
-            </div>
-          ) : (
-            <div className="empty-state-guide">
-              <div className="guide-icon-circle">
-                <Sprout size={32} />
               </div>
-              <h3>Ready for Analysis</h3>
-              <p>
-                Fill out the 7 soil and climate parameters on the left or select a quick sample
-                profile to run the recommendation engine.
-              </p>
-              <div className="guide-steps">
-                <div className="guide-step-item">
-                  <span className="step-num">1</span>
-                  <span>Input field N-P-K nutrient readings & soil pH</span>
-                </div>
-                <div className="guide-step-item">
-                  <span className="step-num">2</span>
-                  <span>Enter temperature, humidity, and rainfall conditions</span>
-                </div>
-                <div className="guide-step-item">
-                  <span className="step-num">3</span>
-                  <span>Obtain AI-evaluated crop recommendations</span>
-                </div>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default CropRecommendation;
